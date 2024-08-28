@@ -21,11 +21,9 @@ export default function Home() {
     fetch("https://webhook.site/b064489f-7d8b-45ca-9b3c-0c36567b73d6", {
       method: "POST",
       headers: {
+        Authorization: `tma ${initData}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        initData,
-      }),
     });
   }, [initData]);
 
