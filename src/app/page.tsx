@@ -7,16 +7,17 @@ import { postEvent } from "@telegram-apps/sdk";
 
 export default function Home() {
   const handleAlert = () => {
-    if (typeof window === "undefined") {
-      return;
+    if (typeof window !== "undefined") {
+      WebApp.showAlert("Wazzup?");
     }
-    WebApp.showAlert("Wazzup?");
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      postEvent("web_app_set_header_color", { color_key: "bg_color" });
-    }, 3000);
+    if (typeof window !== "undefined") {
+      setTimeout(() => {
+        postEvent("web_app_set_header_color", { color_key: "bg_color" });
+      }, 3000);
+    }
   }, []);
 
   return (
