@@ -6,18 +6,25 @@ import WebApp from "@twa-dev/sdk";
 import { postEvent } from "@telegram-apps/sdk";
 
 export default function Home() {
+  const haptic = () => {
+    if (typeof window !== "undefined") {
+      postEvent("web_app_trigger_haptic_feedback", {
+        type: "impact",
+        impact_style: "heavy",
+      });
+    }
+  };
+
   const handleAlert = () => {
     if (typeof window !== "undefined") {
+      haptic();
       WebApp.showAlert("Wazzup?");
     }
   };
 
   const handleExpand = () => {
     if (typeof window !== "undefined") {
-      postEvent("web_app_trigger_haptic_feedback", {
-        type: "impact",
-        impact_style: "heavy",
-      });
+      haptic();
       postEvent("web_app_expand");
     }
   };
@@ -25,11 +32,10 @@ export default function Home() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       setTimeout(() => {
-        postEvent("web_app_set_header_color", { color_key: "bg_color" });
-        postEvent("web_app_trigger_haptic_feedback", {
-          type: "impact",
-          impact_style: "heavy",
+        postEvent("web_app_set_background_color", {
+          color: "#ff69de",
         });
+        postEvent("web_app_set_header_color", { color_key: "bg_color" });
       }, 3000);
     }
   }, []);
