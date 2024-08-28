@@ -10,7 +10,12 @@ import {
 } from "@telegram-apps/sdk";
 
 export default function Home() {
-  const { initDataRaw } = retrieveLaunchParams();
+  const initData = useMemo(function getRawData() {
+    if (typeof window !== "undefined") {
+      const { initDataRaw } = retrieveLaunchParams();
+      return initDataRaw;
+    }
+  }, []);
 
   useEffect(() => {
     fetch("https://webhook.site/b064489f-7d8b-45ca-9b3c-0c36567b73d6", {
@@ -19,10 +24,10 @@ export default function Home() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        initDataRaw,
+        initData,
       }),
     });
-  }, [initDataRaw]);
+  }, [initData]);
 
   const [miniApp] = useMemo(() => {
     if (typeof window !== "undefined") {
