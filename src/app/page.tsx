@@ -23,7 +23,7 @@ import {
 //     }),
 //   ],
 //   ["hash", "89d6079ad6762351f38c6dbbc41bb53048019256a9443988af7a48bcad16ba31"],
-//   ["auth_date", "1716922846"],
+//   ["auth_date", "1725300718"],
 //   ["start_param", "debug"],
 //   ["chat_type", "sender"],
 //   ["chat_instance", "8428209589180549439"],
@@ -67,13 +67,20 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    fetch("https://webhook.site/b064489f-7d8b-45ca-9b3c-0c36567b73d6", {
+    fetch("/api/auth", {
       method: "GET",
       headers: {
         Authorization: `tma ${initData}`,
         "Content-Type": "application/json",
       },
-    });
+    })
+      .then((res) => {
+        WebApp.showAlert("Authorized");
+      })
+      .catch((e) => {
+        console.log(e);
+        WebApp.showAlert("Unauthorized");
+      });
   }, [initData]);
 
   const [miniApp] = useMemo(() => {
