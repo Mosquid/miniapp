@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./page.module.css";
 import WebApp from "@twa-dev/sdk";
 import {
@@ -8,6 +8,7 @@ import {
   initMiniApp,
   retrieveLaunchParams,
 } from "@telegram-apps/sdk";
+import Tap from "@/components/Tap";
 
 // const initDataRaw = new URLSearchParams([
 //   [
@@ -52,6 +53,7 @@ import {
 // });
 
 export default function Home() {
+  const [authorized, setAuthorized] = useState<boolean>(false);
   const user = useMemo(() => {
     if (typeof window !== "undefined") {
       const { initData } = retrieveLaunchParams();
@@ -74,8 +76,8 @@ export default function Home() {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => {
-        WebApp.showAlert("Authorized");
+      .then(() => {
+        setAuthorized(true);
       })
       .catch((e) => {
         console.log(e);
@@ -136,15 +138,17 @@ export default function Home() {
         <>
           <h1>Hello, {user.firstName}!</h1>
           <h3>Mr. {user.lastName}, it&apos;s nice to see you here.</h3>
+          {authorized && <i>(authorized)</i>}
         </>
       )}
       <button className={styles.button} onClick={handleAlert}>
-        Alert
+        Alert (1)
       </button>
 
       <button className={styles.button} onClick={handleExpand}>
         Expand
       </button>
+      {user && user.username && <Tap username={user?.username} />}
     </main>
   );
 }
