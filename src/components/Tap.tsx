@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { User } from "@prisma/client";
 import styles from "@/app/page.module.css";
 import useDebounce from "@/hooks/useDebounce";
+import Button from "./Button";
 
 export interface TapProps {
   username: string;
@@ -79,12 +80,17 @@ const Tap: FC<TapProps> = ({ username }) => {
   }
 
   return (
-    <>
+    <div
+      style={{
+        paddingTop: 20,
+        textAlign: "center",
+      }}
+    >
       <h1>Tokens: {tokens}</h1>
-      <button className={styles.button} onClick={earn}>
-        Earn
-      </button>
-    </>
+      <Button className={styles.button} onClick={earn}>
+        Claim +1
+      </Button>
+    </div>
   );
 };
 

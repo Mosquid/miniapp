@@ -1,0 +1,17 @@
+.button {
+  background-color: var(--accent-green);
+  color: var(--font-dark);
+  font-size: 11px;
+  border-radius: 20px;
+  border: none;
+  min-width: 112px;
+  text-align: center;
+  font-family: var(--font);
+  font-weight: 500;
+  padding: 8px 10px 8px;
+  cursor: pointer;
+}
+
+.button:active {
+  transform: scale(0.98);
+}
