@@ -1,42 +1,12 @@
 import { FC, useEffect, useState } from "react";
 import { User } from "@prisma/client";
-import styles from "@/app/page.module.css";
 import useDebounce from "@/hooks/useDebounce";
 import Button from "./Button";
+import { fetchUser, updateUser } from "@/services/users";
 
 export interface TapProps {
   username: string;
 }
-
-const fetchUser = async (username: string): Promise<User> => {
-  const response = await fetch("/api/users", {
-    headers: {
-      "x-username": username,
-    },
-  });
-
-  const data = await response.json();
-
-  return data.user;
-};
-
-const updateUser = async (
-  username: string,
-  payload: Partial<User>
-): Promise<User> => {
-  const response = await fetch("/api/users", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "x-username": username,
-    },
-    body: JSON.stringify(payload),
-  });
-
-  const data = await response.json();
-
-  return data.user;
-};
 
 const Tap: FC<TapProps> = ({ username }) => {
   const [user, setUser] = useState<User>();
@@ -67,11 +37,7 @@ const Tap: FC<TapProps> = ({ username }) => {
     }
 
     if (user?.tokens !== debounceTokens) {
-      updateUser(username, { tokens: debounceTokens }).then((user) => {
-        if (user) {
-          setUser(user);
-        }
-      });
+      updateUser(username, { tokens: debounceTokens });
     }
   }, [debounceTokens]);
 
@@ -86,10 +52,8 @@ const Tap: FC<TapProps> = ({ username }) => {
         textAlign: "center",
       }}
     >
-      <h1>Tokens: {tokens}</h1>
-      <Button className={styles.button} onClick={earn}>
-        Claim +1
-      </Button>
+      <h1 id="token">Tokens: {tokens}</h1>
+      <Button onClick={earn}>Claim +1</Button>
     </div>
   );
 };

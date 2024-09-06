@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { validate, parse } from "@telegram-apps/init-data-node";
 
 import { User } from "@/lib/db";
+import { getUserPhoto } from "@/lib/telegram";
 
 const API_KEY: string = process.env.BOT_API_KEY || "";
 
@@ -28,6 +29,7 @@ export default async function handler(
         });
         const userData = parse(authData);
         const { user } = userData;
+        const photoUrl = user?.id ? await getUserPhoto(user.id) : undefined;
 
         await User.upsert({
           where: { username: userData.user?.username },
@@ -35,6 +37,7 @@ export default async function handler(
             updatedAt: new Date(),
           },
           create: {
+            photoUrl: photoUrl,
             name: `${user?.firstName} ${user?.lastName}`,
             id: String(user?.id),
             username: user?.username,

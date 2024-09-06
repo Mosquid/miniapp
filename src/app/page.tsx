@@ -1,51 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo } from "react";
 import styles from "./page.module.css";
-import WebApp from "@twa-dev/sdk";
-import {
-  postEvent,
-  initMiniApp,
-  retrieveLaunchParams,
-} from "@telegram-apps/sdk";
+import { postEvent, initMiniApp } from "@telegram-apps/sdk";
 import Tap from "@/components/Tap";
-// import { getMockTelegramEnv } from "@/lib/mock";
+import { useCurrentUser } from "@/app/CurrentUserProvider";
 import Header from "@/components/Header";
 
-// getMockTelegramEnv();
-
-export default function Home() {
-  const [authorized, setAuthorized] = useState<boolean>(false);
-  const user = useMemo(() => {
-    if (typeof window !== "undefined") {
-      const { initData } = retrieveLaunchParams();
-      return initData?.user;
-    }
-  }, []);
-  const initData = useMemo(function getRawData() {
-    if (typeof window !== "undefined") {
-      const { initDataRaw } = retrieveLaunchParams();
-
-      return initDataRaw;
-    }
-  }, []);
-
-  useEffect(() => {
-    fetch("/api/auth", {
-      method: "GET",
-      headers: {
-        Authorization: `tma ${initData}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then(() => {
-        setAuthorized(true);
-      })
-      .catch((e) => {
-        console.log(e);
-        WebApp.showAlert("Unauthorized");
-      });
-  }, [initData]);
+const Home: FC = () => {
+  const user = useCurrentUser();
 
   const [miniApp] = useMemo(() => {
     if (typeof window !== "undefined") {
@@ -64,6 +27,7 @@ export default function Home() {
       });
     }
   };
+  console.log({ haptic });
 
   // const handleAlert = () => {
   //   if (typeof window !== "undefined") {
@@ -97,8 +61,10 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      {user && authorized && <Header user={user} />}
-      {user && user.username && <Tap username={user?.username} />}
+      {user && <Header user={user} />}
+      {user && <Tap username={user.username ?? ""} />}
     </main>
   );
-}
+};
+
+export default Home;

@@ -1,10 +1,10 @@
-import { User } from "@telegram-apps/sdk";
 import { FC } from "react";
 import styles from "./header.module.css";
 import Typography from "../Typography";
+import { CurrentUser } from "@/types/User";
 
 export interface HeaderProps {
-  user: User;
+  user: CurrentUser;
 }
 
 const Header: FC<HeaderProps> = ({ user }) => {
