@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "";
 
 export const fetchUser = async (username: string): Promise<User> => {
   const response = await fetch(`${APP_URL}/api/users`, {
