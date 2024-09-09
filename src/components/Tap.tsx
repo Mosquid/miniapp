@@ -5,10 +5,10 @@ import Button from "./Button";
 import { fetchUser, updateUser } from "@/services/users";
 
 export interface TapProps {
-  username: string;
+  userId: string;
 }
 
-const Tap: FC<TapProps> = ({ username }) => {
+const Tap: FC<TapProps> = ({ userId }) => {
   const [user, setUser] = useState<User>();
   const [tokens, setTokens] = useState<number>(0);
   const debounceTokens = useDebounce(tokens, 500);
@@ -20,12 +20,12 @@ const Tap: FC<TapProps> = ({ username }) => {
   }, [user]);
 
   useEffect(() => {
-    fetchUser(username).then((user) => {
+    fetchUser(userId).then((user) => {
       if (user) {
         setUser(user);
       }
     });
-  }, [username]);
+  }, [userId]);
 
   const earn = () => {
     setTokens(tokens + 1);
@@ -37,7 +37,7 @@ const Tap: FC<TapProps> = ({ username }) => {
     }
 
     if (user?.tokens !== debounceTokens) {
-      updateUser(username, { tokens: debounceTokens });
+      updateUser(userId, { tokens: debounceTokens });
     }
   }, [debounceTokens]);
 

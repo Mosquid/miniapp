@@ -32,7 +32,7 @@ export default async function handler(
         const photoUrl = user?.id ? await getUserPhoto(user.id) : undefined;
 
         await User.upsert({
-          where: { username: userData.user?.username },
+          where: { id: userData.user?.id?.toString() },
           update: {
             updatedAt: new Date(),
           },

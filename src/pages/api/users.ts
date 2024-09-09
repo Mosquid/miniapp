@@ -34,8 +34,8 @@ async function handleGetUser(
   res: NextApiResponse<ResponseData>
 ) {
   const usernameHeader = req.headers["x-username"] || "";
-  const username = usernameHeader.toString();
-  const user = await UserModel.findFirst({ where: { username } });
+  const id = usernameHeader.toString();
+  const user = await UserModel.findFirst({ where: { id } });
 
   if (user) {
     return res.json({ user });

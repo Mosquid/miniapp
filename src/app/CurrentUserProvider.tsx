@@ -59,8 +59,8 @@ const CurrentUserProvider: FC<CurrentUserProviderProps> = ({ children }) => {
   }, [initData]);
 
   useEffect(() => {
-    if (initData?.user?.username) {
-      fetchUser(initData?.user?.username).then((user) => {
+    if (initData?.user?.id) {
+      fetchUser(initData?.user?.id.toString()).then((user) => {
         setCurrentUser({
           ...user,
           firstName: initData?.user?.firstName || "",
@@ -71,7 +71,7 @@ const CurrentUserProvider: FC<CurrentUserProviderProps> = ({ children }) => {
         });
       });
     }
-  }, [initData?.user?.username]);
+  }, [initData?.user?.id]);
 
   const user = useMemo(() => {
     return authorized ? currentUser : null;

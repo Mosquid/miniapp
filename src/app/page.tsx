@@ -7,6 +7,10 @@ import Tap from "@/components/Tap";
 import { useCurrentUser } from "@/app/CurrentUserProvider";
 import Header from "@/components/Header";
 
+// import { getMockTelegramEnv } from "@/lib/mock";
+
+// if (typeof window !== "undefined") getMockTelegramEnv();
+
 const Home: FC = () => {
   const user = useCurrentUser();
 
@@ -62,7 +66,7 @@ const Home: FC = () => {
   return (
     <main className={styles.main}>
       {user && <Header user={user} />}
-      {user && <Tap username={user.username ?? ""} />}
+      {user && <Tap userId={user.id.toString() ?? ""} />}
     </main>
   );
 };
