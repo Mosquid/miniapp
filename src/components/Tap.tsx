@@ -42,7 +42,7 @@ const Tap: FC<TapProps> = ({ userId }) => {
   }, [debounceTokens]);
 
   if (!user) {
-    return <h1>Loading...</h1>;
+    return <h1 style={{ textAlign: "center" }}>Loading...</h1>;
   }
 
   return (

@@ -1,4 +1,4 @@
-import { get } from "@/lib/service";
+import serviceFetch, { get } from "@/lib/service";
 import { User } from "@prisma/client";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "";
@@ -19,7 +19,7 @@ export const updateUser = async (
   userId: string,
   payload: Partial<User>
 ): Promise<User> => {
-  const response = await get("/api/users", {
+  const response = await serviceFetch("/api/users", {
     method: "PUT",
     headers: {
       "x-username": userId,

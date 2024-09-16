@@ -2,6 +2,7 @@
 
 import { authorizeRequest } from "@/lib/auth";
 import { User as UserModel } from "@/lib/db";
+import { getUserPhoto } from "@/lib/telegram";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -15,11 +16,11 @@ async function handleUpdateUser(
   res: NextApiResponse<ResponseData>
 ) {
   const usernameHeader = req.headers["x-username"] || "";
-  const username = usernameHeader.toString();
+  const id = usernameHeader.toString();
   const payload = req.body;
 
   const updatedUser = await UserModel.update({
-    where: { username },
+    where: { id },
     data: payload,
   });
 
@@ -36,10 +37,13 @@ async function handleGetUser(
 ) {
   const usernameHeader = req.headers["x-username"] || "";
   const id = usernameHeader.toString();
-  const user = await UserModel.findFirst({ where: { id } });
+  const [user, photoUrl] = await Promise.all([
+    UserModel.findFirst({ where: { id } }),
+    getUserPhoto(Number(usernameHeader)),
+  ]);
 
   if (user) {
-    return res.json({ user });
+    return res.json({ user: { ...user, photoUrl: photoUrl || null } });
   }
 
   return res.status(404).json({ message: "user not found" });
