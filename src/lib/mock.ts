@@ -23,7 +23,7 @@ const initDataRaw = new URLSearchParams([
   ["chat_instance", "8428209589180549439"],
 ]).toString();
 
-export const getMockTelegramEnv = () => {
+export function getMockTelegramEnv() {
   mockTelegramEnv({
     themeParams: {
       accentTextColor: "#6ab2f2",
@@ -45,4 +45,4 @@ export const getMockTelegramEnv = () => {
     version: "7.2",
     platform: "tdesktop",
   });
-};
+}

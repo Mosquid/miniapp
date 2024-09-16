@@ -1,5 +1,6 @@
 "use client";
 
+import { get } from "@/lib/service";
 import { fetchUser } from "@/services/users";
 import { CurrentUser } from "@/types/User";
 import { retrieveLaunchParams } from "@telegram-apps/sdk";
@@ -23,14 +24,6 @@ const CurrentUserProvider: FC<CurrentUserProviderProps> = ({ children }) => {
   const [authorized, setAuthorized] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
 
-  const initDataRaw = useMemo(() => {
-    if (typeof window !== "undefined") {
-      const { initDataRaw } = retrieveLaunchParams();
-
-      return initDataRaw;
-    }
-  }, []);
-
   const initData = useMemo(() => {
     if (typeof window !== "undefined") {
       const { initData } = retrieveLaunchParams();
@@ -41,18 +34,14 @@ const CurrentUserProvider: FC<CurrentUserProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      fetch("/api/auth", {
+      get("/api/auth", {
         method: "GET",
-        headers: {
-          Authorization: `tma ${initDataRaw}`,
-          "Content-Type": "application/json",
-        },
       })
         .then(() => {
           setAuthorized(true);
         })
-        .catch((e) => {
-          console.log(e);
+        .catch((err) => {
+          console.log("Authorization failed", err);
           // WebApp.showAlert("Unauthorized");
         });
     }

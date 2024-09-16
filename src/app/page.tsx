@@ -9,7 +9,12 @@ import Header from "@/components/Header";
 
 // import { getMockTelegramEnv } from "@/lib/mock";
 
-// if (typeof window !== "undefined") getMockTelegramEnv();
+// if (
+//   typeof window !== "undefined" &&
+//   window.location.href.includes("localhost")
+// ) {
+//   getMockTelegramEnv();
+// }
 
 const Home: FC = () => {
   const user = useCurrentUser();

@@ -1,10 +1,10 @@
 "use server";
 
 import type { NextApiRequest, NextApiResponse } from "next";
-import { validate, parse } from "@telegram-apps/init-data-node";
+import { parse } from "@telegram-apps/init-data-node";
 
 import { User } from "@/lib/db";
-import { getUserPhoto } from "@/lib/telegram";
+import { authorizeRequest, getUserAuthData } from "@/lib/auth";
 
 const API_KEY: string = process.env.BOT_API_KEY || "";
 
@@ -16,20 +16,16 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  const authHeader = req.headers.authorization || "";
-  const [authType, authData = ""] = authHeader.split(" ");
+  const [authType, authData = ""] = getUserAuthData(req);
 
   switch (authType) {
     case "tma":
       try {
         // Validate init data.
-        validate(authData, API_KEY, {
-          // We consider init data sign valid for 1 hour from their creation moment.
-          expiresIn: 3600,
-        });
         const userData = parse(authData);
+        authorizeRequest(req);
+
         const { user } = userData;
-        const photoUrl = user?.id ? await getUserPhoto(user.id) : undefined;
 
         await User.upsert({
           where: { id: userData.user?.id?.toString() },
@@ -37,7 +33,6 @@ export default async function handler(
             updatedAt: new Date(),
           },
           create: {
-            photoUrl: photoUrl,
             name: `${user?.firstName} ${user?.lastName}`,
             id: String(user?.id),
             username: user?.username,
@@ -48,8 +43,8 @@ export default async function handler(
         });
 
         return res.json({ message: "Authorized" });
-      } catch (e) {
-        console.log(e);
+      } catch (err) {
+        console.error("Failed to authorize", err);
         return res.status(401).json({ message: "Unauthorized" });
       }
     // ... other authorization methods.

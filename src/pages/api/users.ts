@@ -1,5 +1,6 @@
 "use server";
 
+import { authorizeRequest } from "@/lib/auth";
 import { User as UserModel } from "@/lib/db";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -48,6 +49,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
+  try {
+    authorizeRequest(req);
+  } catch (error) {
+    console.error(error, "Failed to authorize");
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
   switch (req.method) {
     case "GET":
       return await handleGetUser(req, res);
