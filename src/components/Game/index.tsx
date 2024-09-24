@@ -5,55 +5,84 @@ import { useState, useRef, FC, useEffect } from "react";
 import { Stage, Container, Graphics, Text } from "@pixi/react";
 import { TextStyle } from "pixi.js";
 import { random } from "lodash";
+import styles from "./game.module.css";
+import { GameStatus } from "./types";
+import Controls from "./Controls";
+import Score from "./Score";
 
 export interface GameProps {
-  onStop: (points: number) => void;
+  onStop: () => void;
+}
+
+const INCREMENT = 25;
+
+function getPointCoordinates(
+  point: number,
+  index: number,
+  canvasHeight: number
+) {
+  const x = index * 5;
+  // base is the middle of the canvas
+  const base = canvasHeight / 2;
+  const y = base - point;
+
+  return { x, y };
 }
 
 const Game: FC<GameProps> = ({ onStop }) => {
   const windowWidth = window.innerWidth;
-  const windowHeight = window.innerHeight;
-  const [isRunning, setIsRunning] = useState(true);
-  const [points, setPoints] = useState<Array<{ x: number; y: number }>>([
-    { x: 100, y: windowHeight / 2 },
-  ]);
+  const gameRef = useRef<HTMLDivElement>(null);
+  const [windowHeight, setWindowHeight] = useState(
+    gameRef.current?.clientHeight || 0
+  );
+  const [gameStatus, setGameStatus] = useState(GameStatus.pending);
+  const [points, setPoints] = useState<Array<number>>([0]);
   const maxPoints = 120;
-  const [earnings, setEarnings] = useState(0);
   const textStyle = new TextStyle({
     fill: "white",
   });
+
+  if (gameRef.current && !windowHeight) {
+    setWindowHeight(gameRef.current.clientHeight);
+  }
 
   // Reference for animation frame
   const animationRef = useRef<NodeJS.Timeout>();
 
   // Canvas dimensions
-  const canvasWidth = windowWidth;
+  const canvasWidth = windowWidth || gameRef.current?.clientHeight;
   const canvasHeight = windowHeight;
   const base = canvasHeight / 2;
+  console.log({
+    canvasHeight,
+    windowHeight,
+    test: gameRef.current?.clientHeight,
+  });
+
+  useEffect(() => {
+    if (!windowHeight) {
+      setWindowHeight(gameRef.current?.clientHeight || 0);
+    }
+  }, [windowHeight]);
 
   // Function to start the game loop
   const startGame = () => {
     const addPoint = async () => {
       setPoints((prevPoints) => {
         const lastPoint = prevPoints[prevPoints.length - 1];
-        const lastIndex = prevPoints.length - 1;
+        const rand = random(-1 * INCREMENT, INCREMENT);
+        const newPoint = lastPoint + rand;
+        console.log({ lastPoint, rand, newPoint });
 
-        const newX = lastPoint.x + 5; // Move right
-        const newY = lastPoint.y * random(0.9, 1.1);
-        // console.log({ newY, lastPoint });
-        // Keep y within bounds
-        const boundedY = Math.max(0, Math.min(canvasHeight, newY));
-
-        return [...prevPoints, { x: newX, y: boundedY }];
+        return [...prevPoints, newPoint];
       });
 
       if (points.length >= maxPoints) {
-        setIsRunning(false);
-        onStop(points.length);
+        setGameStatus(GameStatus.ended);
       }
 
       // Continue the loop
-      if (isRunning) {
+      if (gameStatus === GameStatus.running) {
         animationRef.current = setTimeout(addPoint, 50);
         // animationRef.current = requestAnimationFrame(addPoint);
       }
@@ -64,7 +93,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
 
   // Start the game loop when the component mounts
   useEffect(() => {
-    if (isRunning) {
+    if (gameStatus === GameStatus.running) {
       startGame();
     }
 
@@ -74,92 +103,100 @@ const Game: FC<GameProps> = ({ onStop }) => {
         clearTimeout(animationRef.current);
       }
     };
-  }, [isRunning]);
+  }, [gameStatus]);
 
   // Function to handle quitting the game
   const quitGame = () => {
-    setIsRunning(false);
-
-    setEarnings(Math.round(earning));
+    setGameStatus(GameStatus.ended);
   };
 
   // Calculate the offset to make the camera follow the last point
-  const lastPoint = points[points.length - 1];
-  const offsetX = Math.min(0, canvasWidth * 0.9 - lastPoint.x);
-  const earning = base - lastPoint.y;
+  const earning = points[points.length - 1];
+  // const offsetX = Math.min(0, canvasWidth * 0.9 - lastPoint.x);
 
   useEffect(() => {
-    if (isRunning && points.length >= maxPoints) {
+    if (gameStatus === GameStatus.running && points.length >= maxPoints) {
       quitGame();
     }
   }, [points.length]);
 
   const lineColor = earning < 0 ? 0xff0000 : 0x00ff00;
+  const displayScore = Number(earning).toFixed(2);
+  const handleCtaClick = () => {
+    if (gameStatus === GameStatus.pending) {
+      setGameStatus(GameStatus.running);
+      return;
+    }
+
+    if (gameStatus === GameStatus.running) {
+      setGameStatus(GameStatus.ended);
+      return;
+    }
+  };
+
+  const firstPoint = getPointCoordinates(points[0], 0, canvasHeight);
 
   return (
-    <div
-      onClick={isRunning ? quitGame : undefined}
-      style={{
-        cursor: "pointer",
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-      }}
-    >
-      <Stage
-        width={canvasWidth}
-        height={canvasHeight}
-        options={{ backgroundColor: 0x000000 }}
-      >
-        <Container position={[offsetX, 0]}>
-          <Graphics
-            draw={(g) => {
-              g.clear();
-              g.lineStyle(2, lineColor);
-
-              // Draw the line chart
-              g.moveTo(points[0].x, points[0].y);
-              points.forEach((point) => {
-                g.lineTo(point.x, point.y);
-              });
-            }}
-          />
-          {/* Draw X-axis */}
-          <Graphics
-            draw={(g) => {
-              g.lineStyle(1, 0xffffff);
-              g.moveTo(points[0].x, base); // Adjust starting point based on offset
-              g.lineTo(points[points.length - 1].x, base);
-            }}
-          />
-          <Text
-            tint={0xffffff}
-            text={String(earning)}
-            x={points[points.length - 1].x}
-            y={base}
-            style={textStyle}
-          />
-        </Container>
-      </Stage>
-      {!isRunning && (
-        <div
-          style={{
-            textAlign: "center",
-            marginTop: 20,
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            backgroundColor: "rgba(255, 255, 255, 0.2)",
-            padding: 100,
-          }}
+    <div className={styles.root}>
+      <div ref={gameRef} className={styles.stage}>
+        <Stage
+          width={canvasWidth}
+          height={canvasHeight}
+          options={{ backgroundColor: 0x000000 }}
         >
-          <h2>You Quit the Game!</h2>
-          <p>Your Earnings: ${earnings}</p>
-          <button onClick={() => window.location.reload()}>Play Again</button>
-        </div>
+          <Container position={[10, 0]}>
+            <Graphics
+              draw={(g) => {
+                g.clear();
+                g.lineStyle(2, lineColor);
+
+                // Draw the line chart
+                g.moveTo(firstPoint.x, firstPoint.y);
+
+                points.forEach((point, index) => {
+                  const coordinates = getPointCoordinates(
+                    point,
+                    index,
+                    canvasHeight
+                  );
+                  g.lineTo(coordinates.x, coordinates.y);
+                });
+              }}
+            />
+            {/* Draw X-axis */}
+            <Graphics
+              draw={(g) => {
+                g.lineStyle(1, 0xffffff);
+                g.moveTo(firstPoint.x, base); // Adjust starting point based on offset
+                g.lineTo(
+                  getPointCoordinates(
+                    points[points.length - 1],
+                    points.length,
+                    canvasHeight
+                  ).x,
+                  base
+                );
+              }}
+            />
+            <Text
+              tint={0xffffff}
+              text={displayScore}
+              x={
+                getPointCoordinates(
+                  points[points.length - 1],
+                  points.length,
+                  canvasHeight
+                ).x
+              }
+              y={base}
+              style={textStyle}
+            />
+          </Container>
+        </Stage>
+      </div>
+      <Controls onClick={handleCtaClick} points={earning} status={gameStatus} />
+      {gameStatus === GameStatus.ended && (
+        <Score points={earning} currency="YCN" onClick={onStop} />
       )}
     </div>
   );

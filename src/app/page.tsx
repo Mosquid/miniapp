@@ -10,7 +10,7 @@ import dynamic from "next/dynamic";
 const Game = dynamic(() => import("@/components/Game"), { ssr: false });
 
 import { getMockTelegramEnv } from "@/lib/mock";
-import Button from "@/components/Button";
+import GameCTA from "@/components/Game/CTA";
 
 if (
   typeof window !== "undefined" &&
@@ -21,7 +21,6 @@ if (
 
 const Home: FC = () => {
   const user = useCurrentUser();
-  const [setScore] = useState(0);
   const [showGame, setShowGame] = useState(false);
 
   const [miniApp] = useMemo(() => {
@@ -77,7 +76,7 @@ const Home: FC = () => {
     setShowGame(true);
   };
 
-  const handleEndGame = (points: number) => {
+  const handleEndGame = () => {
     setShowGame(false);
   };
 
@@ -86,14 +85,8 @@ const Home: FC = () => {
       <main className={styles.main}>
         {user && <Header user={user} />}
         {user && <Tap userId={user.id.toString() ?? ""} />}
-        <div
-          style={{
-            padding: 20,
-            textAlign: "center",
-          }}
-        >
-          <Button onClick={handlePlay}>Play</Button>
-        </div>
+
+        <GameCTA onPlay={handlePlay} />
       </main>
       {showGame && <Game onStop={handleEndGame} />}
     </Fragment>
