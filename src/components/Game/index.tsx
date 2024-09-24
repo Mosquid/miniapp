@@ -50,14 +50,9 @@ const Game: FC<GameProps> = ({ onStop }) => {
   const animationRef = useRef<NodeJS.Timeout>();
 
   // Canvas dimensions
-  const canvasWidth = windowWidth || gameRef.current?.clientHeight;
+  const canvasWidth = windowWidth || gameRef.current?.clientWidth || 0;
   const canvasHeight = windowHeight;
   const base = canvasHeight / 2;
-  console.log({
-    canvasHeight,
-    windowHeight,
-    test: gameRef.current?.clientHeight,
-  });
 
   useEffect(() => {
     if (!windowHeight) {
@@ -72,7 +67,6 @@ const Game: FC<GameProps> = ({ onStop }) => {
         const lastPoint = prevPoints[prevPoints.length - 1];
         const rand = random(-1 * INCREMENT, INCREMENT);
         const newPoint = lastPoint + rand;
-        console.log({ lastPoint, rand, newPoint });
 
         return [...prevPoints, newPoint];
       });
@@ -112,7 +106,11 @@ const Game: FC<GameProps> = ({ onStop }) => {
 
   // Calculate the offset to make the camera follow the last point
   const earning = points[points.length - 1];
-  // const offsetX = Math.min(0, canvasWidth * 0.9 - lastPoint.x);
+  const offsetX = Math.min(
+    10,
+    canvasWidth * 0.9 -
+      getPointCoordinates(0, points.length - 1, canvasHeight).x
+  );
 
   useEffect(() => {
     if (gameStatus === GameStatus.running && points.length >= maxPoints) {
@@ -144,7 +142,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
           height={canvasHeight}
           options={{ backgroundColor: 0x000000 }}
         >
-          <Container position={[10, 0]}>
+          <Container position={[offsetX, 0]}>
             <Graphics
               draw={(g) => {
                 g.clear();
@@ -173,7 +171,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
                     points[points.length - 1],
                     points.length,
                     canvasHeight
-                  ).x,
+                  ).x * 2,
                   base
                 );
               }}
