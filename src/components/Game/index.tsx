@@ -11,7 +11,7 @@ import Controls from "./Controls";
 import Score from "./Score";
 
 export interface GameProps {
-  onStop: () => void;
+  onStop: (score: number) => void;
 }
 
 const INCREMENT = 25;
@@ -194,7 +194,11 @@ const Game: FC<GameProps> = ({ onStop }) => {
       </div>
       <Controls onClick={handleCtaClick} points={earning} status={gameStatus} />
       {gameStatus === GameStatus.ended && (
-        <Score points={earning} currency="YCN" onClick={onStop} />
+        <Score
+          points={earning}
+          currency="YCN"
+          onClick={() => onStop(earning)}
+        />
       )}
     </div>
   );

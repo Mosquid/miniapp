@@ -14,7 +14,15 @@ import {
   useState,
 } from "react";
 
-const CurrentUserContext = createContext<CurrentUser | null>(null);
+export interface CurrentUserContextValue {
+  user: CurrentUser | null;
+  updateCurrentUser: (user: Partial<CurrentUser>) => void;
+}
+
+const CurrentUserContext = createContext<CurrentUserContextValue>({
+  user: null,
+  updateCurrentUser: () => {},
+});
 
 export interface CurrentUserProviderProps {
   children: React.ReactNode;
@@ -65,9 +73,24 @@ const CurrentUserProvider: FC<CurrentUserProviderProps> = ({ children }) => {
   const user = useMemo(() => {
     return authorized ? currentUser : null;
   }, [authorized, currentUser]);
-  console.log({ authorized });
+
+  const updateCurrentUser = (user: Partial<CurrentUser>) => {
+    setCurrentUser((prev) => ({
+      tokens: prev?.tokens || user.tokens || 0,
+      createdAt: prev?.createdAt || user.createdAt || new Date(),
+      updatedAt: prev?.createdAt || user.createdAt || new Date(),
+      photoUrl: prev?.photoUrl || user.photoUrl || "",
+      username: prev?.username || user.username || "",
+      name: prev?.name || user.name || "",
+      firstName: prev?.firstName || user.firstName || "",
+      id: prev?.id || user.id || 0,
+      ...prev,
+      ...user,
+    }));
+  };
+
   return (
-    <CurrentUserContext.Provider value={user}>
+    <CurrentUserContext.Provider value={{ user, updateCurrentUser }}>
       {children}
     </CurrentUserContext.Provider>
   );

@@ -11,6 +11,7 @@ const Game = dynamic(() => import("@/components/Game"), { ssr: false });
 
 import { getMockTelegramEnv } from "@/lib/mock";
 import GameCTA from "@/components/Game/CTA";
+import { updateUser } from "@/services/users";
 
 if (
   typeof window !== "undefined" &&
@@ -20,8 +21,9 @@ if (
 }
 
 const Home: FC = () => {
-  const user = useCurrentUser();
+  const { user, updateCurrentUser } = useCurrentUser();
   const [showGame, setShowGame] = useState(false);
+  const userId = user?.id.toString() ?? "";
 
   const [miniApp] = useMemo(() => {
     if (typeof window !== "undefined") {
@@ -40,7 +42,6 @@ const Home: FC = () => {
       });
     }
   };
-  console.log({ haptic });
 
   // const handleAlert = () => {
   //   if (typeof window !== "undefined") {
@@ -76,15 +77,21 @@ const Home: FC = () => {
     setShowGame(true);
   };
 
-  const handleEndGame = () => {
+  const handleEndGame = (score: number) => {
     setShowGame(false);
+
+    if (user) {
+      updateUser(userId, { tokens: (user.tokens || 0) + score }).then((data) =>
+        updateCurrentUser({ tokens: data.tokens, updatedAt: data.updatedAt })
+      );
+    }
   };
 
   return (
     <Fragment>
       <main className={styles.main}>
         {user && <Header user={user} />}
-        {user && <Tap userId={user.id.toString() ?? ""} />}
+        {user && <Tap userId={userId} />}
 
         <GameCTA onPlay={handlePlay} />
       </main>

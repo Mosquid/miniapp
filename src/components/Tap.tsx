@@ -3,12 +3,14 @@ import { User } from "@prisma/client";
 import useDebounce from "@/hooks/useDebounce";
 import Button from "./Button";
 import { fetchUser, updateUser } from "@/services/users";
+import { useCurrentUser } from "@/app/CurrentUserProvider";
 
 export interface TapProps {
   userId: string;
 }
 
 const Tap: FC<TapProps> = ({ userId }) => {
+  const { user: currentUser } = useCurrentUser();
   const [user, setUser] = useState<User>();
   const [tokens, setTokens] = useState<number>(0);
   const debounceTokens = useDebounce(tokens, 500);
@@ -18,6 +20,15 @@ const Tap: FC<TapProps> = ({ userId }) => {
       setTokens(user.tokens);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (user && currentUser && currentUser.tokens) {
+      setUser({
+        ...user,
+        tokens: currentUser.tokens,
+      });
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     fetchUser(userId).then((user) => {
