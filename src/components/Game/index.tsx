@@ -39,7 +39,6 @@ const Game: FC<GameProps> = ({ onStop }) => {
   );
   const [gameStatus, setGameStatus] = useState(GameStatus.pending);
   const [points, setPoints] = useState<Array<number>>([0]);
-  const [currentCoordinates, setCurrentCoordinates] = useState({ x: 0, y: 0 });
   const maxPoints = 120;
   const textStyle = new TextStyle({
     fill: "white",
@@ -56,13 +55,21 @@ const Game: FC<GameProps> = ({ onStop }) => {
   const canvasWidth = windowWidth || gameRef.current?.clientWidth || 0;
   const canvasHeight = windowHeight;
   const base = canvasHeight / 2;
+  const [currentCoordinates, setCurrentCoordinates] = useState({
+    x: 0,
+    y: base || 3,
+  });
 
   useEffect(() => {
     if (!windowHeight) {
       setWindowHeight(gameRef.current?.clientHeight || 0);
+
+      setCurrentCoordinates({
+        x: 0,
+        y: (gameRef.current?.clientHeight || 0) / 2,
+      });
     }
   }, [windowHeight]);
-
   // Function to start the game loop
   const startGame = () => {
     const addPoint = async () => {
@@ -138,7 +145,12 @@ const Game: FC<GameProps> = ({ onStop }) => {
     points.length,
     canvasHeight
   );
+  const isDotOffScreen = currentPoint.y < 0 || currentPoint.y > canvasHeight;
   const offsetX = Math.min(0, canvasWidth * 0.9 - currentPoint.x);
+  const offsetY = isDotOffScreen
+    ? Math.max(canvasHeight * 0.1 - currentPoint.y, -canvasHeight * 0.8)
+    : 0;
+
   const endOfChart =
     Math.abs(offsetX) +
     Math.max(canvasWidth, getPointCoordinates(0, points.length - 1, 0).x);
@@ -175,7 +187,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
           height={canvasHeight}
           options={{ backgroundColor: 0x000000 }}
         >
-          <Container position={[offsetX, 0]}>
+          <Container position={[offsetX, offsetY]}>
             <Graphics
               draw={(g) => {
                 g.clear();
@@ -225,6 +237,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
 
             <Graphics
               draw={(g) => {
+                g.clear();
                 g.lineStyle(1, 0xff0000);
                 g.moveTo(firstPoint.x, base); // Adjust starting point based on offset
                 g.lineTo(endOfChart, base);
@@ -251,7 +264,10 @@ const Game: FC<GameProps> = ({ onStop }) => {
                 ).x - (textRef.current?.width || 0),
                 0
               )}
-              y={currentCoordinates.y}
+              y={
+                currentCoordinates.y -
+                (textRef.current ? textRef.current.height : 0)
+              }
               style={textStyle}
             />
           </Container>
