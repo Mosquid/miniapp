@@ -2,8 +2,8 @@
 
 // src/Game.tsx
 import { useState, useRef, FC, useEffect } from "react";
-import { Stage, Container, Graphics, Text } from "@pixi/react";
-import { TextStyle } from "pixi.js";
+import { Stage, Container, Graphics, Text, PixiRef } from "@pixi/react";
+import { TextStyle, Ticker } from "pixi.js";
 import { random } from "lodash";
 import styles from "./game.module.css";
 import { GameStatus } from "./types";
@@ -30,6 +30,8 @@ function getPointCoordinates(
 }
 
 const Game: FC<GameProps> = ({ onStop }) => {
+  const ticker = new Ticker();
+  const textRef = useRef<PixiRef<typeof Text>>(null);
   const windowWidth = window.innerWidth;
   const gameRef = useRef<HTMLDivElement>(null);
   const [windowHeight, setWindowHeight] = useState(
@@ -37,6 +39,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
   );
   const [gameStatus, setGameStatus] = useState(GameStatus.pending);
   const [points, setPoints] = useState<Array<number>>([0]);
+  const [currentCoordinates, setCurrentCoordinates] = useState({ x: 0, y: 0 });
   const maxPoints = 120;
   const textStyle = new TextStyle({
     fill: "white",
@@ -77,7 +80,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
 
       // Continue the loop
       if (gameStatus === GameStatus.running) {
-        animationRef.current = setTimeout(addPoint, 50);
+        animationRef.current = setTimeout(addPoint, 100);
         // animationRef.current = requestAnimationFrame(addPoint);
       }
     };
@@ -106,11 +109,6 @@ const Game: FC<GameProps> = ({ onStop }) => {
 
   // Calculate the offset to make the camera follow the last point
   const earning = points[points.length - 1];
-  const offsetX = Math.min(
-    10,
-    canvasWidth * 0.9 -
-      getPointCoordinates(0, points.length - 1, canvasHeight).x
-  );
 
   useEffect(() => {
     if (gameStatus === GameStatus.running && points.length >= maxPoints) {
@@ -133,6 +131,41 @@ const Game: FC<GameProps> = ({ onStop }) => {
   };
 
   const firstPoint = getPointCoordinates(points[0], 0, canvasHeight);
+  // const adjustedFirstPoint = { x: firstPoint.x, y: firstPoint.y };
+
+  const currentPoint = getPointCoordinates(
+    points[points.length - 1],
+    points.length,
+    canvasHeight
+  );
+  const offsetX = Math.min(0, canvasWidth * 0.9 - currentPoint.x);
+  const endOfChart =
+    Math.abs(offsetX) +
+    Math.max(canvasWidth, getPointCoordinates(0, points.length - 1, 0).x);
+
+  useEffect(() => {
+    if (gameStatus !== GameStatus.running) {
+      ticker.stop();
+      return;
+    }
+
+    ticker.add(() => {
+      setCurrentCoordinates((prevPoint) => {
+        const speed = 0.25; // Adjust the speed for smoothness
+        return {
+          x: prevPoint.x + (currentPoint.x - prevPoint.x) * speed,
+          y: prevPoint.y + (currentPoint.y - prevPoint.y) * speed,
+        };
+      });
+    });
+
+    ticker.start();
+
+    return () => {
+      ticker.stop();
+      ticker.destroy();
+    };
+  }, [currentPoint]);
 
   return (
     <div className={styles.root}>
@@ -143,6 +176,34 @@ const Game: FC<GameProps> = ({ onStop }) => {
           options={{ backgroundColor: 0x000000 }}
         >
           <Container position={[offsetX, 0]}>
+            <Graphics
+              draw={(g) => {
+                g.clear();
+                g.lineStyle(1, 0xcccccc);
+
+                const numberOfLines = 14; // Total number of intervals (spaces)
+                const spacing = canvasWidth / (numberOfLines - 1); // Spacing to ensure lines are centered
+                const centerX = Math.abs(offsetX) + canvasWidth / 2;
+
+                // Adjust starting point to center the lines symmetrically
+                const startX =
+                  centerX - Math.floor(numberOfLines / 2) * spacing;
+
+                for (let i = 0; i < numberOfLines; i++) {
+                  const x = startX + i * spacing;
+
+                  // Thicker line for the center
+                  if (Math.abs(x - centerX) < spacing / 2) {
+                    g.lineStyle(2, 0xffffff); // Center line
+                  } else {
+                    g.lineStyle(1, 0xffffff, 0.09); // Normal line
+                  }
+
+                  g.moveTo(x, 0);
+                  g.lineTo(x, canvasHeight);
+                }
+              }}
+            />
             <Graphics
               draw={(g) => {
                 g.clear();
@@ -161,32 +222,36 @@ const Game: FC<GameProps> = ({ onStop }) => {
                 });
               }}
             />
-            {/* Draw X-axis */}
+
             <Graphics
               draw={(g) => {
-                g.lineStyle(1, 0xffffff);
+                g.lineStyle(1, 0xff0000);
                 g.moveTo(firstPoint.x, base); // Adjust starting point based on offset
-                g.lineTo(
-                  getPointCoordinates(
-                    points[points.length - 1],
-                    points.length,
-                    canvasHeight
-                  ).x * 2,
-                  base
-                );
+                g.lineTo(endOfChart, base);
+              }}
+            />
+
+            <Graphics
+              draw={(g) => {
+                g.clear();
+                g.beginFill(0xffffff);
+                g.drawCircle(currentCoordinates.x, currentCoordinates.y, 3);
+                g.endFill();
               }}
             />
             <Text
+              ref={textRef}
               tint={0xffffff}
               text={displayScore}
-              x={
+              x={Math.max(
                 getPointCoordinates(
                   points[points.length - 1],
                   points.length,
                   canvasHeight
-                ).x
-              }
-              y={base}
+                ).x - (textRef.current?.width || 0),
+                0
+              )}
+              y={currentCoordinates.y}
               style={textStyle}
             />
           </Container>

@@ -22,7 +22,7 @@ if (
 
 const Home: FC = () => {
   const { user, updateCurrentUser } = useCurrentUser();
-  const [showGame, setShowGame] = useState(false);
+  const [showGame, setShowGame] = useState(true);
   const userId = user?.id.toString() ?? "";
 
   const [miniApp] = useMemo(() => {
