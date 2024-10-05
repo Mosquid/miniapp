@@ -4,7 +4,7 @@
 import { useState, useRef, FC, useEffect } from "react";
 import { Stage, Container, Graphics, Text, PixiRef } from "@pixi/react";
 import { TextStyle, Ticker } from "pixi.js";
-import { fill, random, size } from "lodash";
+import { random } from "lodash";
 import styles from "./game.module.css";
 import { GameStatus } from "./types";
 import Controls from "./Controls";
@@ -238,10 +238,11 @@ const Game: FC<GameProps> = ({ onStop }) => {
             />
             {Array(18)
               .fill("")
-              .map((point, index) => {
+              .map((_, index) => {
                 const x = 7 + index * Math.floor(canvasWidth / 18);
                 return (
                   <Text
+                    key={index}
                     scale={0.4}
                     style={new TextStyle({ fill: "rgba(255, 255, 255, 0.23)" })}
                     tint={0xffffff}
