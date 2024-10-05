@@ -4,7 +4,7 @@
 import { useState, useRef, FC, useEffect } from "react";
 import { Stage, Container, Graphics, Text, PixiRef } from "@pixi/react";
 import { TextStyle, Ticker } from "pixi.js";
-import { random } from "lodash";
+import { fill, random, size } from "lodash";
 import styles from "./game.module.css";
 import { GameStatus } from "./types";
 import Controls from "./Controls";
@@ -15,13 +15,14 @@ export interface GameProps {
 }
 
 const INCREMENT = 25;
+const pointSpacing = 5;
 
 function getPointCoordinates(
   point: number,
   index: number,
   canvasHeight: number
 ) {
-  const x = index * 5;
+  const x = index * pointSpacing;
   // base is the middle of the canvas
   const base = canvasHeight / 2;
   const y = base - point;
@@ -39,7 +40,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
   );
   const [gameStatus, setGameStatus] = useState(GameStatus.pending);
   const [points, setPoints] = useState<Array<number>>([0]);
-  const maxPoints = 120;
+
   const textStyle = new TextStyle({
     fill: "white",
   });
@@ -54,6 +55,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
   // Canvas dimensions
   const canvasWidth = windowWidth || gameRef.current?.clientWidth || 0;
   const canvasHeight = windowHeight;
+  const maxPoints = Math.floor(canvasWidth / pointSpacing);
   const base = canvasHeight / 2;
   const [currentCoordinates, setCurrentCoordinates] = useState({
     x: 0,
@@ -146,7 +148,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
     canvasHeight
   );
   const isDotOffScreen = currentPoint.y < 0 || currentPoint.y > canvasHeight;
-  const offsetX = Math.min(0, canvasWidth * 0.9 - currentPoint.x);
+  const offsetX = Math.min(0, canvasWidth - currentPoint.x);
   const offsetY = isDotOffScreen
     ? Math.max(canvasHeight * 0.1 - currentPoint.y, -canvasHeight * 0.8)
     : 0;
@@ -234,6 +236,21 @@ const Game: FC<GameProps> = ({ onStop }) => {
                 });
               }}
             />
+            {Array(18)
+              .fill("")
+              .map((point, index) => {
+                const x = 7 + index * Math.floor(canvasWidth / 18);
+                return (
+                  <Text
+                    scale={0.4}
+                    style={new TextStyle({ fill: "rgba(255, 255, 255, 0.23)" })}
+                    tint={0xffffff}
+                    text={String(index + 1)}
+                    x={x}
+                    y={canvasHeight - 20}
+                  />
+                );
+              })}
 
             <Graphics
               draw={(g) => {
