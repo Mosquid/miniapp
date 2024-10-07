@@ -3,7 +3,7 @@ import { User } from "@prisma/client";
 import useDebounce from "@/hooks/useDebounce";
 import Button from "./Button";
 import { fetchUser, updateUser } from "@/services/users";
-import { useCurrentUser } from "@/app/CurrentUserProvider";
+import { useCurrentUser } from "@/components/CurrentUserProvider";
 
 export interface TapProps {
   userId: string;

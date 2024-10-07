@@ -53,7 +53,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
   const animationRef = useRef<NodeJS.Timeout>();
 
   // Canvas dimensions
-  const canvasWidth = windowWidth || gameRef.current?.clientWidth || 0;
+  const canvasWidth = gameRef.current?.clientWidth || windowWidth || 0;
   const canvasHeight = windowHeight;
   const maxPoints = Math.floor(canvasWidth / pointSpacing);
   const base = canvasHeight / 2;

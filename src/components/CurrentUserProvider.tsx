@@ -4,7 +4,7 @@ import { get } from "@/lib/service";
 import { fetchUser } from "@/services/users";
 import { CurrentUser } from "@/types/User";
 import { retrieveLaunchParams } from "@telegram-apps/sdk";
-// import WebApp from "@twa-dev/sdk";
+
 import {
   FC,
   createContext,

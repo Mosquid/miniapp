@@ -1,0 +1,18 @@
+.root {
+  background-color: var(--bg-dark);
+  color: var(--font-color);
+  border-radius: 12px 12px 0 0;
+  height: 54px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.root ul {
+  flex: 1;
+  vertical-align: top;
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  align-items: center;
+}

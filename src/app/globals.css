@@ -10,6 +10,7 @@
   --bg-color: rgb(var(--bg-rgb));
   --font-color: rgb(var(--font-rgb));
   --font-dark: #000;
+  --bg-dark: #2b2b2b;
   --accent-green: #c5ff00;
   --font: var(--font-montserrat);
 }
