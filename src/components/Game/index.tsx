@@ -149,7 +149,9 @@ const Game: FC<GameProps> = ({ onStop }) => {
     canvasHeight
   );
 
-  const isDotOffScreen = currentPoint.y < 0 || currentPoint.y > canvasHeight;
+  const isDotOffScreen =
+    currentPoint.y < 0 - -1 * maxY || currentPoint.y > canvasHeight + maxY;
+
   const offsetY = isDotOffScreen ? currentPoint.y - base : 0;
 
   const endOfChart = Math.max(
@@ -158,10 +160,10 @@ const Game: FC<GameProps> = ({ onStop }) => {
   );
 
   useEffect(() => {
-    if (Math.abs(offsetY) > Math.abs(maxY)) {
+    if (Math.abs(offsetY) > Math.abs(maxY) || isDotOffScreen) {
       setMaxY(offsetY);
     }
-  }, [offsetY]);
+  }, [offsetY, isDotOffScreen]);
 
   useEffect(() => {
     if (gameStatus !== GameStatus.running) {
