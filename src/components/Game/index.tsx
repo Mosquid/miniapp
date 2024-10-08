@@ -35,6 +35,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
   const textRef = useRef<PixiRef<typeof Text>>(null);
   const windowWidth = window.innerWidth;
   const gameRef = useRef<HTMLDivElement>(null);
+  const [maxY, setMaxY] = useState(0);
   const [windowHeight, setWindowHeight] = useState(
     gameRef.current?.clientHeight || 0
   );
@@ -79,7 +80,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
         const lastPoint = prevPoints[prevPoints.length - 1];
         const rand = random(-1 * INCREMENT, INCREMENT);
         const newPoint = lastPoint + rand;
-
+        console.log({ newPoint });
         return [...prevPoints, newPoint];
       });
 
@@ -147,15 +148,20 @@ const Game: FC<GameProps> = ({ onStop }) => {
     points.length,
     canvasHeight
   );
-  const isDotOffScreen = currentPoint.y < 0 || currentPoint.y > canvasHeight;
-  const offsetX = Math.min(0, canvasWidth - currentPoint.x);
-  const offsetY = isDotOffScreen
-    ? Math.max(canvasHeight * 0.1 - currentPoint.y, -canvasHeight * 0.8)
-    : 0;
 
-  const endOfChart =
-    Math.abs(offsetX) +
-    Math.max(canvasWidth, getPointCoordinates(0, points.length - 1, 0).x);
+  const isDotOffScreen = currentPoint.y < 0 || currentPoint.y > canvasHeight;
+  const offsetY = isDotOffScreen ? currentPoint.y - base : 0;
+
+  const endOfChart = Math.max(
+    canvasWidth,
+    getPointCoordinates(0, points.length - 1, 0).x
+  );
+
+  useEffect(() => {
+    if (Math.abs(offsetY) > Math.abs(maxY)) {
+      setMaxY(offsetY);
+    }
+  }, [offsetY]);
 
   useEffect(() => {
     if (gameStatus !== GameStatus.running) {
@@ -189,7 +195,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
           height={canvasHeight}
           options={{ backgroundColor: 0x000000 }}
         >
-          <Container position={[offsetX, offsetY]}>
+          <Container position={[0, -1 * maxY]}>
             <Graphics
               draw={(g) => {
                 g.clear();
@@ -197,7 +203,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
 
                 const numberOfLines = 14; // Total number of intervals (spaces)
                 const spacing = canvasWidth / (numberOfLines - 1); // Spacing to ensure lines are centered
-                const centerX = Math.abs(offsetX) + canvasWidth / 2;
+                const centerX = canvasWidth / 2;
 
                 // Adjust starting point to center the lines symmetrically
                 const startX =
@@ -208,13 +214,13 @@ const Game: FC<GameProps> = ({ onStop }) => {
 
                   // Thicker line for the center
                   if (Math.abs(x - centerX) < spacing / 2) {
-                    g.lineStyle(2, 0xffffff); // Center line
+                    g.lineStyle(2, 0xffffff, 0.35); // Center line
                   } else {
-                    g.lineStyle(1, 0xffffff, 0.09); // Normal line
+                    g.lineStyle(1, 0xff0000, 0.09); // Normal line
                   }
 
-                  g.moveTo(x, 0);
-                  g.lineTo(x, canvasHeight);
+                  g.moveTo(x, maxY);
+                  g.lineTo(x, canvasHeight + maxY);
                 }
               }}
             />
@@ -248,15 +254,16 @@ const Game: FC<GameProps> = ({ onStop }) => {
                     tint={0xffffff}
                     text={String(index + 1)}
                     x={x}
-                    y={canvasHeight - 20}
+                    y={canvasHeight - 20 + maxY}
                   />
                 );
               })}
 
+            {/* x axis */}
             <Graphics
               draw={(g) => {
                 g.clear();
-                g.lineStyle(1, 0xff0000);
+                g.lineStyle(1, 0xffffff);
                 g.moveTo(firstPoint.x, base); // Adjust starting point based on offset
                 g.lineTo(endOfChart, base);
               }}
