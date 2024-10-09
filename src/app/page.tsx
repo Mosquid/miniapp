@@ -7,7 +7,6 @@ import Tap from "@/components/Tap";
 import { useCurrentUser } from "@/components/CurrentUserProvider";
 import Header from "@/components/Header";
 import { useRouter } from "next/navigation";
-
 import { getMockTelegramEnv } from "@/lib/mock";
 import GameCTA from "@/components/Game/CTA";
 

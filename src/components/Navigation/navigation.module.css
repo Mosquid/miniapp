@@ -6,6 +6,7 @@
   display: flex;
   justify-content: start;
   align-items: center;
+  padding-right: 12px;
 }
 
 .root ul {
@@ -15,4 +16,24 @@
   justify-content: space-around;
   list-style: none;
   align-items: center;
+}
+.menuItem {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  font-size: 10px;
+  gap: 2px;
+  color: var(--font-color);
+  width: 70px;
+  opacity: 0.6;
+}
+
+.menuItem img {
+  max-width: 20px;
+}
+
+.active {
+  color: white;
+  opacity: 1;
 }

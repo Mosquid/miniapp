@@ -11,3 +11,8 @@
   font-size: 25px;
   line-height: 1.2;
 }
+.h1 {
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: bold;
+}

@@ -13,7 +13,7 @@ const sizeClasses = {
 export interface TypographyProps extends React.HTMLAttributes<HTMLSpanElement> {
   children: React.ReactNode;
   element?: keyof JSX.IntrinsicElements;
-  weight?: 400 | 500 | 600 | 700 | 800 | 900;
+  weight?: 300 | 400 | 500 | 600 | 700 | 800 | 900;
   variant: keyof typeof sizeClasses | "p";
 }
 
