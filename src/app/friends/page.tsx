@@ -7,7 +7,7 @@ import Typography from "@/components/Typography";
 const Friends: FC = () => {
   return (
     <main className={styles.main}>
-      <Typography variant="h1">Here you'll see your friends</Typography>
+      <Typography variant="h1">Here you&apos;ll see your friends</Typography>
     </main>
   );
 };

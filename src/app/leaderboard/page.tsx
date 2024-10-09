@@ -7,7 +7,7 @@ import Typography from "@/components/Typography";
 const Leaderboard: FC = () => {
   return (
     <main className={styles.main}>
-      <Typography variant="h1">Here we'll put the leaderboard</Typography>
+      <Typography variant="h1">Here we&apos;ll put the leaderboard</Typography>
     </main>
   );
 };
