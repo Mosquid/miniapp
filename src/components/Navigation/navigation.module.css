@@ -2,7 +2,7 @@
   background-color: var(--bg-dark);
   color: var(--font-color);
   border-radius: 12px 12px 0 0;
-  height: 54px;
+  height: 60px;
   display: flex;
   justify-content: start;
   align-items: center;
