@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import { useRouter } from "next/navigation";
 import { getMockTelegramEnv } from "@/lib/mock";
 import GameCTA from "@/components/Game/CTA";
+import BirdGameCTA from "./bird/Cta";
 
 if (
   typeof window !== "undefined" &&
@@ -58,6 +59,11 @@ const Home: FC = () => {
         {user && <Tap userId={userId} />}
 
         <GameCTA onPlay={handlePlay} />
+        <BirdGameCTA
+          onPlay={() => {
+            router.push("/bird");
+          }}
+        />
       </main>
     </Fragment>
   );
