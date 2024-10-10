@@ -82,9 +82,9 @@ const Game: React.FC<GameProps> = ({ size }) => {
   const generateTerrain = () => {
     const pointsTop: Array<{ x: number; y: number }> = [];
     const pointsBottom: Array<{ x: number; y: number }> = [];
-    const amplitude = 75;
+    const amplitude = height * 0.25;
     const wavelength = 200;
-    for (let x = 0; x < width * 4; x += 50) {
+    for (let x = 0; x < width * 8; x += 50) {
       const yTop =
         amplitude * Math.sin((x + Math.random() * 1000) / wavelength) + 100;
       const yBottom =
@@ -130,7 +130,7 @@ const Game: React.FC<GameProps> = ({ size }) => {
     if (y - 10 < 0 || y + 10 > height) {
       return true;
     }
-    if (terrainOffset > width * 2) {
+    if (terrainOffset > width * 4) {
       setScore(Math.floor(score));
       setIsGameOver(true);
     }
