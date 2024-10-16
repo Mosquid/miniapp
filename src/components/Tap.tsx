@@ -4,6 +4,7 @@ import useDebounce from "@/hooks/useDebounce";
 import Button from "./Button";
 import { fetchUser, updateUser } from "@/services/users";
 import { useCurrentUser } from "@/components/CurrentUserProvider";
+import { noop } from "lodash";
 
 export interface TapProps {
   userId: string;
@@ -41,6 +42,7 @@ const Tap: FC<TapProps> = ({ userId }) => {
   const earn = () => {
     setTokens(tokens + 1);
   };
+  noop(earn);
 
   useEffect(() => {
     if (!user) {
@@ -64,7 +66,7 @@ const Tap: FC<TapProps> = ({ userId }) => {
       }}
     >
       <h1 id="token">Tokens: {tokens}</h1>
-      <Button onClick={earn}>Claim +1</Button>
+      {/* <Button onClick={earn}>Claim +1</Button> */}
     </div>
   );
 };

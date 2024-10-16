@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { getMockTelegramEnv } from "@/lib/mock";
 import GameCTA from "@/components/Game/CTA";
 import BirdGameCTA from "./bird/Cta";
+import Tap from "@/components/Tap";
 
 if (
   typeof window !== "undefined" &&
@@ -57,6 +58,7 @@ const Home: FC = () => {
       <main className={styles.main}>
         {user && <Header user={user} />}
         {user && <Invite userId={userId} />}
+        {user && <Tap userId={userId} />}
 
         <GameCTA onPlay={handlePlay} />
         <BirdGameCTA
