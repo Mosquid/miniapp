@@ -83,6 +83,8 @@ const CurrentUserProvider: FC<CurrentUserProviderProps> = ({ children }) => {
       username: prev?.username || user.username || "",
       name: prev?.name || user.name || "",
       firstName: prev?.firstName || user.firstName || "",
+      referralCode: prev?.referralCode || user.referralCode || "",
+      invitedById: prev?.invitedById || user.invitedById || "",
       id: prev?.id || user.id || 0,
       ...prev,
       ...user,
