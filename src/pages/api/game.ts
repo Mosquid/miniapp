@@ -27,10 +27,9 @@ export default async function handler(
       },
     });
 
-    if (user.invitedById && tokens > 0) {
-      console.log("user.invitedById", user.invitedById);
+    if (user.invitedById) {
       const referralPoints = getReferralPoints(tokens);
-      console.log("referralPoints", referralPoints);
+
       await GameResult.create({
         data: {
           userId: user.invitedById,

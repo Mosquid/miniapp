@@ -55,7 +55,6 @@ const Home: FC = () => {
   return (
     <Fragment>
       <main className={styles.main}>
-        <h1>Local</h1>
         {user && <Header user={user} />}
         {user && <Invite userId={userId} />}
 
