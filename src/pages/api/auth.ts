@@ -5,6 +5,7 @@ import { parse } from "@telegram-apps/init-data-node";
 
 import { User } from "@/lib/db";
 import { authorizeRequest, getUserAuthData } from "@/lib/auth";
+import { generateReferralCode } from "@/lib/strings";
 
 type ResponseData = {
   message: string;
@@ -30,6 +31,7 @@ export default async function handler(
             updatedAt: new Date(),
           },
           create: {
+            referralCode: generateReferralCode(),
             name: `${user?.firstName} ${user?.lastName}`,
             id: String(user?.id),
             username: user?.username,

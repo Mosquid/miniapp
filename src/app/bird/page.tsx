@@ -9,7 +9,6 @@ const Staking: FC = () => {
   const [size, setSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    console.log(ref);
     const handleResize = () => {
       if (ref.current) {
         console.log("current");
@@ -21,8 +20,6 @@ const Staking: FC = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  console.log(size);
 
   return (
     <main className={styles.main} ref={ref}>
