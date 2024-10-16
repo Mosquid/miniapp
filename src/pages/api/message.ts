@@ -8,7 +8,7 @@ function isStartWithReferralCode(req: NextApiRequest) {
   try {
     if (req.body && req.body.message && req.body.message.text) {
       const text = req.body.message.text;
-      console.log(text);
+
       const pattern = /^\/start\s+[a-zA-Z0-9]{8}$/;
       return pattern.test(text);
     }

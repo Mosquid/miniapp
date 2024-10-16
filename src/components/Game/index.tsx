@@ -2,13 +2,14 @@
 
 // src/Game.tsx
 import { useState, useRef, FC, useEffect } from "react";
-import { Stage, Container, Graphics, Text, PixiRef } from "@pixi/react";
+import { Stage, Container, Graphics, Text, PixiRef, Sprite } from "@pixi/react";
 import { TextStyle, Ticker } from "pixi.js";
 import { random } from "lodash";
 import styles from "./game.module.css";
 import { GameStatus } from "./types";
 import Controls from "./Controls";
 import Score from "./Score";
+import { useBackgroundGradient } from "./Gradient";
 
 export interface GameProps {
   onStop: (score: number) => void;
@@ -189,6 +190,8 @@ const Game: FC<GameProps> = ({ onStop }) => {
     };
   }, [currentPoint]);
 
+  const gradient = useBackgroundGradient(canvasWidth, canvasHeight);
+
   return (
     <div className={styles.root}>
       <div ref={gameRef} className={styles.stage}>
@@ -198,6 +201,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
           options={{ backgroundColor: 0x000000 }}
         >
           <Container position={[0, -1 * maxY]}>
+            {gradient && <Sprite texture={gradient} />}
             <Graphics
               draw={(g) => {
                 g.clear();
@@ -244,10 +248,10 @@ const Game: FC<GameProps> = ({ onStop }) => {
                 });
               }}
             />
-            {Array(18)
+            {Array(15)
               .fill("")
               .map((_, index) => {
-                const x = 7 + index * Math.floor(canvasWidth / 18);
+                const x = 7 + index * Math.floor(canvasWidth / 15);
                 return (
                   <Text
                     key={index}
@@ -255,7 +259,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
                     style={new TextStyle({ fill: "rgba(255, 255, 255, 0.23)" })}
                     tint={0xffffff}
                     text={String(index + 1)}
-                    x={x}
+                    x={x + 5}
                     y={canvasHeight - 20 + maxY}
                   />
                 );
