@@ -6,10 +6,10 @@ const initDataRaw = new URLSearchParams([
   [
     "user",
     JSON.stringify({
-      id: 191432373,
+      id: 191432372,
       first_name: "Andrew",
       last_name: "Rogue",
-      username: "PavlyshkoS",
+      username: "mosquid",
       language_code: "en",
       photo_url: "https://t.me/i/userpic/320/rogue.jpg",
       is_premium: true,

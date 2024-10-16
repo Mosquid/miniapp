@@ -2,10 +2,10 @@
 
 import { FC } from "react";
 import styles from "../page.module.css";
-import { updateUser } from "@/services/users";
 import { useCurrentUser } from "@/components/CurrentUserProvider";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import { saveGameResult } from "@/services/game";
 const Game = dynamic(() => import("@/components/Game"), { ssr: false });
 
 const ToTheMoon: FC = () => {
@@ -14,12 +14,10 @@ const ToTheMoon: FC = () => {
   const userId = user?.id.toString() ?? "";
   const handleEndGame = (score: number) => {
     if (user) {
-      updateUser(userId, { tokens: (user.tokens || 0) + score }).then(
-        (data) => {
-          updateCurrentUser({ tokens: data.tokens, updatedAt: data.updatedAt });
-          router.push("/");
-        }
-      );
+      saveGameResult(userId, score).then((data) => {
+        updateCurrentUser({ tokens: data.tokens, updatedAt: new Date() });
+        router.push("/");
+      });
     }
   };
 

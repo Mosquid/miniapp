@@ -3,7 +3,7 @@
 import { FC, Fragment, useEffect, useMemo } from "react";
 import styles from "./page.module.css";
 import { postEvent, initMiniApp } from "@telegram-apps/sdk";
-import Tap from "@/components/Tap";
+import Invite from "@/components/Invite";
 import { useCurrentUser } from "@/components/CurrentUserProvider";
 import Header from "@/components/Header";
 import { useRouter } from "next/navigation";
@@ -55,8 +55,9 @@ const Home: FC = () => {
   return (
     <Fragment>
       <main className={styles.main}>
+        <h1>Local</h1>
         {user && <Header user={user} />}
-        {user && <Tap userId={userId} />}
+        {user && <Invite userId={userId} />}
 
         <GameCTA onPlay={handlePlay} />
         <BirdGameCTA

@@ -6,8 +6,6 @@ import { parse } from "@telegram-apps/init-data-node";
 import { User } from "@/lib/db";
 import { authorizeRequest, getUserAuthData } from "@/lib/auth";
 
-const API_KEY: string = process.env.BOT_API_KEY || "";
-
 type ResponseData = {
   message: string;
 };
@@ -21,7 +19,6 @@ export default async function handler(
   switch (authType) {
     case "tma":
       try {
-        // Validate init data.
         const userData = parse(authData);
         authorizeRequest(req);
 
@@ -47,7 +44,6 @@ export default async function handler(
         console.error("Failed to authorize", err);
         return res.status(401).json({ message: "Unauthorized" });
       }
-    // ... other authorization methods.
     default:
       return res.status(401).json({ message: "Unauthorized" });
   }

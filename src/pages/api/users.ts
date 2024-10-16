@@ -3,6 +3,7 @@
 import { authorizeRequest } from "@/lib/auth";
 import { User as UserModel } from "@/lib/db";
 import { getUserPhoto } from "@/lib/telegram";
+import { getUserTokens } from "@/queries/users";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -37,13 +38,16 @@ async function handleGetUser(
 ) {
   const usernameHeader = req.headers["x-username"] || "";
   const id = usernameHeader.toString();
-  const [user, photoUrl] = await Promise.all([
+  const [user, photoUrl, tokens] = await Promise.all([
     UserModel.findFirst({ where: { id } }),
     getUserPhoto(Number(usernameHeader)),
+    getUserTokens(id),
   ]);
 
   if (user) {
-    return res.json({ user: { ...user, photoUrl: photoUrl || null } });
+    return res.json({
+      user: { ...user, photoUrl: photoUrl || null, tokens },
+    });
   }
 
   return res.status(404).json({ message: "user not found" });
