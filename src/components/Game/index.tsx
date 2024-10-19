@@ -16,6 +16,7 @@ import { useCurrentUser } from "../CurrentUserProvider";
 
 export interface GameProps {
   onStop: (score: number) => void;
+  onRepeat: () => void;
 }
 
 const INCREMENT = 25;
@@ -34,7 +35,7 @@ function getPointCoordinates(
   return { x, y };
 }
 
-const Game: FC<GameProps> = ({ onStop }) => {
+const Game: FC<GameProps> = ({ onStop, onRepeat }) => {
   const ticker = new Ticker();
   const { user } = useCurrentUser();
   const textRef = useRef<PixiRef<typeof Text>>(null);
@@ -85,7 +86,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
         const lastPoint = prevPoints[prevPoints.length - 1];
         const rand = random(-1 * INCREMENT, INCREMENT);
         const newPoint = lastPoint + rand;
-        console.log({ newPoint });
+
         return [...prevPoints, newPoint];
       });
 
@@ -311,7 +312,12 @@ const Game: FC<GameProps> = ({ onStop }) => {
       </div>
       <Controls onClick={handleCtaClick} points={earning} status={gameStatus} />
       {gameStatus === GameStatus.ended && (
-        <Score points={earning} onClick={() => onStop(earning)} />
+        <Score
+          points={earning}
+          user={user}
+          onClose={() => onStop(earning)}
+          onRepeat={onRepeat}
+        />
       )}
     </div>
   );

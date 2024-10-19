@@ -21,7 +21,7 @@
 .score {
   position: fixed;
   z-index: 99;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--bg-main);
   top: 0;
   right: 0;
   bottom: 0;

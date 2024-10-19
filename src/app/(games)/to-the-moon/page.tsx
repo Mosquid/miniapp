@@ -22,9 +22,13 @@ const ToTheMoon = () => {
     }
   };
 
+  const handleRepeat = () => {
+    router.push("/to-the-moon");
+  };
+
   return (
     <main className={styles.main}>
-      <Game onStop={handleEndGame} />
+      <Game onStop={handleEndGame} onRepeat={handleRepeat} />
     </main>
   );
 };
