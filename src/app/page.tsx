@@ -57,16 +57,22 @@ const Home = () => {
   return (
     <NavLayout>
       <main className={styles.main}>
-        {user && <Header user={user} />}
-        {user && <Invite userId={userId} />}
-        {user && <Tap userId={userId} />}
-
-        <GameCTA onPlay={handlePlay} />
-        <BirdGameCTA
-          onPlay={() => {
-            router.push("/bird");
+        <div
+          style={{
+            padding: "20px 20px 0 ",
           }}
-        />
+        >
+          {user && <Header user={user} />}
+          {user && <Invite userId={userId} />}
+          {user && <Tap userId={userId} />}
+
+          <GameCTA onPlay={handlePlay} />
+          <BirdGameCTA
+            onPlay={() => {
+              router.push("/bird");
+            }}
+          />
+        </div>
       </main>
     </NavLayout>
   );

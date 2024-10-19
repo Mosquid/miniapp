@@ -21,8 +21,13 @@ const ToTheMoon = () => {
     }
   };
 
-  const handleRepeat = () => {
-    window.location.reload();
+  const handleRepeat = (score: number) => {
+    if (user) {
+      saveGameResult(userId, score).then((data) => {
+        updateCurrentUser({ tokens: data.tokens, updatedAt: new Date() });
+        window.location.reload();
+      });
+    }
   };
 
   return (

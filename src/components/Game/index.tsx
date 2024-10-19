@@ -16,7 +16,7 @@ import { useCurrentUser } from "../CurrentUserProvider";
 
 export interface GameProps {
   onStop: (score: number) => void;
-  onRepeat: () => void;
+  onRepeat: (score: number) => void;
 }
 
 const INCREMENT = 25;
@@ -316,7 +316,7 @@ const Game: FC<GameProps> = ({ onStop, onRepeat }) => {
           points={earning}
           user={user}
           onClose={() => onStop(earning)}
-          onRepeat={onRepeat}
+          onRepeat={() => onRepeat(earning)}
         />
       )}
     </div>
