@@ -1,7 +1,9 @@
 import { FC, useMemo } from "react";
-import Button from "../Button";
 import styles from "./game.module.css";
 import { GameStatus } from "./types";
+import Typography from "../Typography";
+import Image from "next/image";
+import rocketIcon from "./assets/rocket.svg";
 
 export interface ScoreProps {
   points: number;
@@ -10,15 +12,10 @@ export interface ScoreProps {
   currency?: string;
 }
 
-const Controls: FC<ScoreProps> = ({
-  points,
-  status,
-  onClick,
-  currency = "YCN",
-}) => {
+const Controls: FC<ScoreProps> = ({ points, status, onClick }) => {
   const btnProps = useMemo(() => {
     if (status === GameStatus.pending) {
-      return { children: "Start" };
+      return { children: "Go", icon: true };
     }
 
     if (status === GameStatus.running) {
@@ -35,10 +32,12 @@ const Controls: FC<ScoreProps> = ({
 
   return (
     <div className={styles.controls}>
-      <span>
-        {points}&nbsp;{currency}
-      </span>
-      <Button {...btnProps} onClick={onClick} />
+      <div {...btnProps} onClick={onClick} className={styles.button}>
+        <Typography variant="p" weight={300}>
+          {btnProps.icon && <Image width={28} src={rocketIcon} alt="rocket" />}
+          {btnProps.children}
+        </Typography>
+      </div>
     </div>
   );
 };

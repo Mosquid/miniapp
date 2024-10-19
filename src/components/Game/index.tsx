@@ -10,6 +10,9 @@ import { GameStatus } from "./types";
 import Controls from "./Controls";
 import Score from "./Score";
 import { useBackgroundGradient } from "./Gradient";
+import ToTheMoonHeader from "@/app/(games)/to-the-moon/header";
+import user from "@/lib/db/models/User";
+import { useCurrentUser } from "../CurrentUserProvider";
 
 export interface GameProps {
   onStop: (score: number) => void;
@@ -33,6 +36,7 @@ function getPointCoordinates(
 
 const Game: FC<GameProps> = ({ onStop }) => {
   const ticker = new Ticker();
+  const { user } = useCurrentUser();
   const textRef = useRef<PixiRef<typeof Text>>(null);
   const windowWidth = window.innerWidth;
   const gameRef = useRef<HTMLDivElement>(null);
@@ -127,7 +131,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
     }
   }, [points.length]);
 
-  const lineColor = earning < 0 ? 0xff0000 : 0x00ff00;
+  const lineColor = earning < 0 ? 0xff0000 : 0xc5ff00;
   const displayScore = Number(earning).toFixed(2);
   const handleCtaClick = () => {
     if (gameStatus === GameStatus.pending) {
@@ -194,6 +198,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
 
   return (
     <div className={styles.root}>
+      <ToTheMoonHeader user={user} score={earning} />
       <div ref={gameRef} className={styles.stage}>
         <Stage
           width={canvasWidth}
@@ -306,11 +311,7 @@ const Game: FC<GameProps> = ({ onStop }) => {
       </div>
       <Controls onClick={handleCtaClick} points={earning} status={gameStatus} />
       {gameStatus === GameStatus.ended && (
-        <Score
-          points={earning}
-          currency="YCN"
-          onClick={() => onStop(earning)}
-        />
+        <Score points={earning} onClick={() => onStop(earning)} />
       )}
     </div>
   );

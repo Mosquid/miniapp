@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { saveGameResult } from "@/services/game";
 import FullscreenLayout from "@/components/FullscreenLayout";
+import ToTheMoonHeader from "./header";
 const Game = dynamic(() => import("@/components/Game"), { ssr: false });
 
 const ToTheMoon = () => {

@@ -1,0 +1,45 @@
+.root {
+  overflow: hidden;
+  background-color: var(--bg-main);
+  padding: 15px 12px 0;
+  height: 80px;
+  flex-shrink: 0;
+}
+.profile {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-bottom: -1px;
+  z-index: 1;
+  position: relative;
+}
+.divider {
+  height: 1px;
+  background-color: white;
+  opacity: 0.47;
+  flex: 1;
+  margin-bottom: 21px;
+}
+.avatar {
+  border-radius: 7px;
+  background-color: var(--bg-dark);
+}
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.score {
+  display: flex;
+  gap: 5px;
+}
+.score span {
+  position: relative;
+  bottom: 7px;
+  align-self: flex-end;
+}
+.score .scoreValue {
+  font-size: 42px;
+  bottom: 0;
+  align-self: flex-end;
+}

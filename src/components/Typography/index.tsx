@@ -9,6 +9,7 @@ const sizeClasses = {
   h4: styles.h4,
   h5: styles.h5,
   h6: styles.h6,
+  medium: styles.medium,
 };
 export interface TypographyProps extends React.HTMLAttributes<HTMLSpanElement> {
   children: React.ReactNode;
