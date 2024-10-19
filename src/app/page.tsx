@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, Fragment, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import styles from "./page.module.css";
 import { postEvent, initMiniApp } from "@telegram-apps/sdk";
 import Invite from "@/components/Invite";
@@ -9,8 +9,9 @@ import Header from "@/components/Header";
 import { useRouter } from "next/navigation";
 import { getMockTelegramEnv } from "@/lib/mock";
 import GameCTA from "@/components/Game/CTA";
-import BirdGameCTA from "./bird/Cta";
+import BirdGameCTA from "./(games)/bird/Cta";
 import Tap from "@/components/Tap";
+import NavLayout from "@/components/NavLayout";
 
 if (
   typeof window !== "undefined" &&
@@ -19,7 +20,7 @@ if (
   getMockTelegramEnv();
 }
 
-const Home: FC = () => {
+const Home = () => {
   const router = useRouter();
   const { user } = useCurrentUser();
   const userId = user?.id.toString() ?? "";
@@ -54,7 +55,7 @@ const Home: FC = () => {
   };
 
   return (
-    <Fragment>
+    <NavLayout>
       <main className={styles.main}>
         {user && <Header user={user} />}
         {user && <Invite userId={userId} />}
@@ -67,7 +68,7 @@ const Home: FC = () => {
           }}
         />
       </main>
-    </Fragment>
+    </NavLayout>
   );
 };
 

@@ -1,8 +1,8 @@
 import { FC } from "react";
-import TouchArea from "../../components/TouchArea";
+import TouchArea from "@/components/TouchArea";
 import bird from "./assets/bird.svg";
-import Typography from "../../components/Typography";
-import styles from "../../components/Game/game.module.css";
+import Typography from "@/components/Typography";
+import styles from "@/components/Game/game.module.css";
 
 export interface CTAProps {
   onPlay: () => void;

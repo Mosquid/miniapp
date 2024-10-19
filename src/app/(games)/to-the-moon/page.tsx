@@ -1,14 +1,14 @@
 "use client";
 
-import { FC } from "react";
-import styles from "../page.module.css";
+import styles from "../../page.module.css";
 import { useCurrentUser } from "@/components/CurrentUserProvider";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { saveGameResult } from "@/services/game";
+import FullscreenLayout from "@/components/FullscreenLayout";
 const Game = dynamic(() => import("@/components/Game"), { ssr: false });
 
-const ToTheMoon: FC = () => {
+const ToTheMoon = () => {
   const router = useRouter();
   const { user, updateCurrentUser } = useCurrentUser();
   const userId = user?.id.toString() ?? "";
@@ -27,5 +27,9 @@ const ToTheMoon: FC = () => {
     </main>
   );
 };
+
+ToTheMoon.getLayout = (page: React.ReactNode) => (
+  <FullscreenLayout>{page}</FullscreenLayout>
+);
 
 export default ToTheMoon;

@@ -1,10 +1,9 @@
 "use client";
 
-import { FC } from "react";
-import styles from "../page.module.css";
+import styles from "../../page.module.css";
 import Typography from "@/components/Typography";
 
-const Friends: FC = () => {
+const Friends = () => {
   return (
     <main className={styles.main}>
       <Typography variant="h1">Here you&apos;ll see your friends</Typography>
