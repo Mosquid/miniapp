@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import styles from "./game.module.css";
 import Button from "../Button";
 import { CurrentUser } from "@/types/User";
@@ -12,15 +12,38 @@ export interface ScoreProps {
 }
 
 const Score: FC<ScoreProps> = ({ points, onClose, onRepeat, user }) => {
+  const [repeatLoading, setRepeatLoading] = useState(false);
+  const [closeLoading, setCloseLoading] = useState(false);
+
+  const handleRepeat = () => {
+    setRepeatLoading(true);
+    onRepeat();
+  };
+
+  const handleClose = () => {
+    setCloseLoading(true);
+    onClose();
+  };
+
   return (
     <div className={styles.score}>
       <ToTheMoonHeader score={points} user={user} />
 
       <div style={{ display: "flex", gap: 10 }}>
-        <Button onClick={onClose} type="highlight">
+        <Button
+          onClick={handleClose}
+          type="highlight"
+          loading={closeLoading}
+          disabled={repeatLoading || closeLoading}
+        >
           Close
         </Button>
-        <Button onClick={onRepeat} type="highlight">
+        <Button
+          onClick={handleRepeat}
+          type="highlight"
+          loading={repeatLoading}
+          disabled={repeatLoading || closeLoading}
+        >
           Repeat
         </Button>
       </div>

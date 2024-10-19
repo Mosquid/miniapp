@@ -8,6 +8,7 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   disabled?: boolean;
   style?: CSSProperties;
   type?: "default" | "highlight";
+  loading?: boolean;
 }
 
 const Button: FC<ButtonProps> = ({
@@ -17,6 +18,7 @@ const Button: FC<ButtonProps> = ({
   disabled,
   style,
   type = "default",
+  loading,
 }): ReactElement => {
   return (
     <button
@@ -26,7 +28,8 @@ const Button: FC<ButtonProps> = ({
         styles.button,
         className,
         disabled ? styles.disabled : "",
-        type === "highlight" ? styles.highlight : ""
+        type === "highlight" ? styles.highlight : "",
+        loading ? styles.loading : ""
       )}
     >
       {children}

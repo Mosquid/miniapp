@@ -1,3 +1,12 @@
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+}
+
 .button {
   background-color: var(--accent-green);
   color: var(--font-dark);
@@ -31,4 +40,8 @@
   font-size: 11px;
   font-weight: 300;
   background-color: var(--beige);
+}
+.button.loading {
+  pointer-events: none;
+  animation: pulse 1s infinite;
 }
