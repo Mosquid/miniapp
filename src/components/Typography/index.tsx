@@ -29,7 +29,7 @@ const Typography: FC<TypographyProps> = ({
     variant in sizeClasses
       ? sizeClasses[variant as keyof typeof sizeClasses]
       : "";
-  console.log({ sizeClass });
+
   return (
     <Element
       style={{

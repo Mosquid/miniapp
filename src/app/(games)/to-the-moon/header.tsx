@@ -34,7 +34,19 @@ const ToTheMoonHeader: FC<GameHeaderProps> = ({ user, score }) => {
                 weight={300}
                 className={styles.scoreValue}
               >
-                {score.toFixed(2)}
+                {score > 0 ? "+" : ""}
+                {score
+                  .toFixed(2)
+                  .split(".")
+                  .map((part, index) => (
+                    <span
+                      key={index}
+                      className={index === 1 ? styles.decimal : ""}
+                    >
+                      {index === 1 && "."}
+                      {part}
+                    </span>
+                  ))}
               </Typography>
               <Typography variant="medium" weight={300}>
                 sqz

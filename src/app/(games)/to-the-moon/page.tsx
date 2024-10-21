@@ -6,33 +6,39 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { saveGameResult } from "@/services/game";
 import FullscreenLayout from "@/components/FullscreenLayout";
+import { useState } from "react";
+import Loader from "@/components/Loader";
+import useDebounce from "@/hooks/useDebounce";
 const Game = dynamic(() => import("@/components/Game"), { ssr: false });
 
 const ToTheMoon = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const debounceLoading = useDebounce(isLoading, 600);
   const router = useRouter();
   const { user, updateCurrentUser } = useCurrentUser();
   const userId = user?.id.toString() ?? "";
   const handleEndGame = (score: number) => {
-    if (user) {
-      saveGameResult(userId, score).then((data) => {
-        updateCurrentUser({ tokens: data.tokens, updatedAt: new Date() });
-        router.push("/");
-      });
-    }
+    router.push("/");
   };
 
   const handleRepeat = (score: number) => {
+    window.location.reload();
+  };
+
+  const handleEnd = (score: number) => {
     if (user) {
+      setIsLoading(true);
       saveGameResult(userId, score).then((data) => {
         updateCurrentUser({ tokens: data.tokens, updatedAt: new Date() });
-        window.location.reload();
+        setIsLoading(false);
       });
     }
   };
 
   return (
     <main className={styles.main}>
-      <Game onStop={handleEndGame} onRepeat={handleRepeat} />
+      {(debounceLoading || isLoading) && <Loader />}
+      <Game onStop={handleEndGame} onRepeat={handleRepeat} onEnd={handleEnd} />
     </main>
   );
 };

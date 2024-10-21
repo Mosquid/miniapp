@@ -19,7 +19,12 @@ const Controls: FC<ScoreProps> = ({ points, status, onClick }) => {
     }
 
     if (status === GameStatus.running) {
-      return { children: "Take" };
+      return {
+        children: "Take",
+        style: {
+          backgroundColor: "#fdff81",
+        },
+      };
     }
 
     if (status === GameStatus.ended) {

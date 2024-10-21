@@ -44,3 +44,7 @@
   bottom: 0;
   align-self: flex-end;
 }
+
+.decimal {
+  opacity: 0.5;
+}

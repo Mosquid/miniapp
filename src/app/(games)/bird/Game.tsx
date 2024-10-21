@@ -131,7 +131,7 @@ const Game: React.FC<GameProps> = ({ size }) => {
       return true;
     }
     if (terrainOffset > width * 4) {
-      setScore(Math.floor(score));
+      setScore(score);
       setIsGameOver(true);
     }
     return false;
@@ -190,7 +190,7 @@ const Game: React.FC<GameProps> = ({ size }) => {
           pointerEvents: "none",
         }}
       >
-        Score: {Math.floor(score)}
+        Score: {score}
       </div>
       {isGameOver && (
         <div

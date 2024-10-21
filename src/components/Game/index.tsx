@@ -2,24 +2,23 @@
 
 // src/Game.tsx
 import { useState, useRef, FC, useEffect } from "react";
-import { Stage, Container, Graphics, Text, PixiRef, Sprite } from "@pixi/react";
+import { Stage, Container, Graphics, Text, PixiRef } from "@pixi/react";
 import { TextStyle, Ticker } from "pixi.js";
 import { random } from "lodash";
 import styles from "./game.module.css";
 import { GameStatus } from "./types";
 import Controls from "./Controls";
 import Score from "./Score";
-import { useBackgroundGradient } from "./Gradient";
 import ToTheMoonHeader from "@/app/(games)/to-the-moon/header";
-import user from "@/lib/db/models/User";
 import { useCurrentUser } from "../CurrentUserProvider";
 
 export interface GameProps {
   onStop: (score: number) => void;
   onRepeat: (score: number) => void;
+  onEnd: (score: number) => void;
 }
 
-const INCREMENT = 25;
+const INCREMENT = 25.1;
 const pointSpacing = 5;
 
 function getPointCoordinates(
@@ -35,7 +34,7 @@ function getPointCoordinates(
   return { x, y };
 }
 
-const Game: FC<GameProps> = ({ onStop, onRepeat }) => {
+const Game: FC<GameProps> = ({ onStop, onRepeat, onEnd }) => {
   const ticker = new Ticker();
   const { user } = useCurrentUser();
   const textRef = useRef<PixiRef<typeof Text>>(null);
@@ -50,6 +49,8 @@ const Game: FC<GameProps> = ({ onStop, onRepeat }) => {
 
   const textStyle = new TextStyle({
     fill: "white",
+    fontSize: 15,
+    fontWeight: "bold",
   });
 
   if (gameRef.current && !windowHeight) {
@@ -106,6 +107,10 @@ const Game: FC<GameProps> = ({ onStop, onRepeat }) => {
 
   // Start the game loop when the component mounts
   useEffect(() => {
+    if (gameStatus === GameStatus.ended) {
+      onEnd(earning);
+    }
+
     if (gameStatus === GameStatus.running) {
       startGame();
     }
@@ -195,8 +200,6 @@ const Game: FC<GameProps> = ({ onStop, onRepeat }) => {
     };
   }, [currentPoint]);
 
-  const gradient = useBackgroundGradient(canvasWidth, canvasHeight);
-
   return (
     <div className={styles.root}>
       <ToTheMoonHeader user={user} score={earning} />
@@ -204,14 +207,12 @@ const Game: FC<GameProps> = ({ onStop, onRepeat }) => {
         <Stage
           width={canvasWidth}
           height={canvasHeight}
-          options={{ backgroundColor: 0x000000 }}
+          options={{ backgroundColor: "white", backgroundAlpha: 0 }}
         >
           <Container position={[0, -1 * maxY]}>
-            {gradient && <Sprite texture={gradient} />}
             <Graphics
               draw={(g) => {
                 g.clear();
-                g.lineStyle(1, 0xcccccc);
 
                 const numberOfLines = 14; // Total number of intervals (spaces)
                 const spacing = canvasWidth / (numberOfLines - 1); // Spacing to ensure lines are centered
@@ -228,7 +229,7 @@ const Game: FC<GameProps> = ({ onStop, onRepeat }) => {
                   if (Math.abs(x - centerX) < spacing / 2) {
                     g.lineStyle(2, 0xffffff, 0.35); // Center line
                   } else {
-                    g.lineStyle(1, 0xff0000, 0.09); // Normal line
+                    g.lineStyle(1, 0xffffff, 0.09); // Normal line
                   }
 
                   g.moveTo(x, maxY);
@@ -239,7 +240,7 @@ const Game: FC<GameProps> = ({ onStop, onRepeat }) => {
             <Graphics
               draw={(g) => {
                 g.clear();
-                g.lineStyle(2, lineColor);
+                g.lineStyle(3, lineColor);
 
                 // Draw the line chart
                 g.moveTo(firstPoint.x, firstPoint.y);
