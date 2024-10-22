@@ -26,7 +26,7 @@ export default async function handler(
     await GameResult.create({
       data: {
         userId: user.id,
-        tokensEarned: tokens.toString(),
+        tokensEarned: tokens,
         gameType: "numans",
       },
     });
