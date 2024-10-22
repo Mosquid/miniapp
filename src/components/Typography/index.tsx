@@ -24,6 +24,7 @@ const Typography: FC<TypographyProps> = ({
   element: Element = "span",
   weight = 400,
   variant = "p",
+  style,
 }) => {
   const sizeClass =
     variant in sizeClasses
@@ -34,6 +35,7 @@ const Typography: FC<TypographyProps> = ({
     <Element
       style={{
         fontWeight: weight,
+        ...style,
       }}
       className={cls(className, sizeClass, styles.typography)}
     >

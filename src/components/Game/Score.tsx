@@ -4,6 +4,7 @@ import Button from "../Button";
 import { CurrentUser } from "@/types/User";
 import ToTheMoonHeader from "@/app/(games)/to-the-moon/header";
 import Typography from "../Typography";
+import { useGameState } from "../GameStateProvider";
 
 export interface ScoreProps {
   points: number;
@@ -13,10 +14,10 @@ export interface ScoreProps {
 }
 
 const Score: FC<ScoreProps> = ({ points, onClose, onRepeat, user }) => {
-  const [repeatLoading, setRepeatLoading] = useState(false);
-  const [closeLoading, setCloseLoading] = useState(false);
+  const { isLoading } = useGameState();
   const [score, setScore] = useState(user?.tokens || 0);
   const [pointsToAdd, setPointsToAdd] = useState(Math.abs(points));
+  const delay = Math.abs(points) > 50 ? 0.2 : 1;
 
   useEffect(() => {
     if (pointsToAdd > 0) {
@@ -27,20 +28,10 @@ const Score: FC<ScoreProps> = ({ points, onClose, onRepeat, user }) => {
           return Number(newScore.toFixed(2));
         });
         setPointsToAdd((prevPoints) => Math.max(0, prevPoints - 0.1));
-      }, 0.1);
+      }, delay);
       return () => clearTimeout(timeout);
     }
   }, [points, pointsToAdd]);
-
-  const handleRepeat = () => {
-    setRepeatLoading(true);
-    onRepeat();
-  };
-
-  const handleClose = () => {
-    setCloseLoading(true);
-    onClose();
-  };
 
   return (
     <div className={styles.score}>
@@ -48,20 +39,10 @@ const Score: FC<ScoreProps> = ({ points, onClose, onRepeat, user }) => {
       <Typography variant="h2">Total: {score.toFixed(2)} sqz</Typography>
 
       <div style={{ display: "flex", gap: 10 }}>
-        <Button
-          onClick={handleClose}
-          type="highlight"
-          loading={closeLoading}
-          disabled={repeatLoading || closeLoading}
-        >
+        <Button onClick={onClose} type="highlight" disabled={isLoading}>
           Close
         </Button>
-        <Button
-          onClick={handleRepeat}
-          type="highlight"
-          loading={repeatLoading}
-          disabled={repeatLoading || closeLoading}
-        >
+        <Button onClick={onRepeat} type="highlight" disabled={isLoading}>
           Repeat
         </Button>
       </div>

@@ -34,7 +34,7 @@
   display: flex;
   gap: 5px;
 }
-.score span {
+.score div {
   position: relative;
   bottom: 7px;
   align-self: flex-end;

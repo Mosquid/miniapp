@@ -1,9 +1,8 @@
 import { FC } from "react";
 import styles from "./styles.module.css";
 import Typography from "@/components/Typography";
-import Image from "next/image";
-import rocket from "@/assets/rocket.svg";
 import { CurrentUser } from "@/types/User";
+import Avatar from "@/components/Avatar";
 
 export interface GameHeaderProps {
   user: CurrentUser | null;
@@ -17,13 +16,7 @@ const ToTheMoonHeader: FC<GameHeaderProps> = ({ user, score }) => {
         <>
           <div className={styles.flex}>
             <div className={styles.profile}>
-              <Image
-                className={styles.avatar}
-                width={40}
-                height={40}
-                src={user.photoUrl || rocket}
-                alt={user.username || user.name || ""}
-              />
+              <Avatar user={user} />
               <Typography weight={300} variant="medium">
                 {user.name}
               </Typography>
@@ -32,6 +25,7 @@ const ToTheMoonHeader: FC<GameHeaderProps> = ({ user, score }) => {
               <Typography
                 variant="medium"
                 weight={300}
+                element="div"
                 className={styles.scoreValue}
               >
                 {score > 0 ? "+" : ""}
@@ -48,7 +42,7 @@ const ToTheMoonHeader: FC<GameHeaderProps> = ({ user, score }) => {
                     </span>
                   ))}
               </Typography>
-              <Typography variant="medium" weight={300}>
+              <Typography variant="medium" element="div" weight={300}>
                 sqz
               </Typography>
             </div>

@@ -15,6 +15,13 @@
   --accent-green: #c5ff00;
   --beige: #fffed3;
   --font: var(--font-montserrat);
+  --bg-gradient: linear-gradient(
+    to bottom,
+    rgba(86, 247, 200, 0.47) 0%,
+    rgba(0, 0, 0, 0.47) 35%,
+    rgba(0, 0, 0, 0.47) 65%,
+    rgba(86, 247, 200, 0.47) 100%
+  );
 }
 
 @media (prefers-color-scheme: dark) {

@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from "react";
 import { User } from "@prisma/client";
 import useDebounce from "@/hooks/useDebounce";
-import Button from "./Button";
 import { fetchUser, updateUser } from "@/services/users";
 import { useCurrentUser } from "@/components/CurrentUserProvider";
 import { noop } from "lodash";
+import Typography from "./Typography";
 
 export interface TapProps {
   userId: string;
@@ -65,7 +65,17 @@ const Tap: FC<TapProps> = ({ userId }) => {
         textAlign: "center",
       }}
     >
-      <h1 id="token">Tokens: {tokens}</h1>
+      <Typography
+        variant="p"
+        element="div"
+        weight={300}
+        style={{ fontSize: 15 }}
+      >
+        Total balance SQZ
+      </Typography>
+      <Typography variant="h1" weight={300} style={{ fontSize: 42 }}>
+        {tokens.toFixed(2)}
+      </Typography>
       {/* <Button onClick={earn}>Claim +1</Button> */}
     </div>
   );

@@ -5,13 +5,13 @@ import styles from "./page.module.css";
 import { postEvent, initMiniApp } from "@telegram-apps/sdk";
 import Invite from "@/components/Invite";
 import { useCurrentUser } from "@/components/CurrentUserProvider";
-import Header from "@/components/Header";
 import { useRouter } from "next/navigation";
 import { getMockTelegramEnv } from "@/lib/mock";
 import GameCTA from "@/components/Game/CTA";
 import BirdGameCTA from "./(games)/bird/Cta";
 import Tap from "@/components/Tap";
 import NavLayout from "@/components/NavLayout";
+import HomeHeader from "@/components/HomeHeader";
 
 if (
   typeof window !== "undefined" &&
@@ -62,7 +62,7 @@ const Home = () => {
             padding: "20px 20px 0 ",
           }}
         >
-          {user && <Header user={user} />}
+          {user && <HomeHeader user={user} />}
           {user && <Invite userId={userId} />}
           {user && <Tap userId={userId} />}
 
