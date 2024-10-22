@@ -11,7 +11,6 @@ const Staking: FC = () => {
   useEffect(() => {
     const handleResize = () => {
       if (ref.current) {
-        console.log("current");
         const { width, height } = ref.current.getBoundingClientRect();
         setSize({ width, height });
       }

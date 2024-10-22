@@ -49,7 +49,7 @@ const CurrentUserProvider: FC<CurrentUserProviderProps> = ({ children }) => {
           setAuthorized(true);
         })
         .catch((err) => {
-          console.log("Authorization failed", err);
+          console.error("Authorization failed", err);
           // WebApp.showAlert("Unauthorized");
         });
     }

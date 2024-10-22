@@ -46,7 +46,11 @@ async function handleGetUser(
 
   if (user) {
     return res.json({
-      user: { ...user, photoUrl: photoUrl || null, tokens },
+      user: {
+        ...user,
+        photoUrl: photoUrl || null,
+        tokens: tokens.toNumber(),
+      },
     });
   }
 

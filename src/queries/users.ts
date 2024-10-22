@@ -1,5 +1,6 @@
 import { GameResult, User as UserModel } from "@/lib/db";
 import { User } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime/library";
 
 export const getUserByReferralCode = async (
   code: string
@@ -13,16 +14,16 @@ export const getUserByReferralCode = async (
   return user;
 };
 
-export const getUserTokens = async (userId: string): Promise<number> => {
+export const getUserTokens = async (userId: string): Promise<Decimal> => {
   try {
     const totalPoints = await GameResult.aggregate({
       where: { userId },
       _sum: { tokensEarned: true },
     });
 
-    return totalPoints._sum.tokensEarned || 0;
+    return new Decimal(totalPoints._sum.tokensEarned || 0);
   } catch (error) {
     console.error("Failed to get user tokens", error);
-    return 0;
+    return new Decimal(0);
   }
 };

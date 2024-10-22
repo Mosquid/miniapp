@@ -3,6 +3,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { GameResult } from "@/lib/db";
 import { getReferralPoints } from "@/lib/game";
 import { getUserTokens } from "@/queries/users";
+import { Decimal } from "@prisma/client/runtime/library";
+
+Decimal.set({ toExpPos: 12, precision: 6 });
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,9 +14,10 @@ export default async function handler(
   try {
     const usernameHeader = req.headers["x-username"] || "";
     const id = usernameHeader.toString();
-    const tokens = parseInt(req.body.tokens);
+    const tokens = new Decimal(Number(req.body.tokens).toFixed(6));
 
     const user = await User.findUnique({ where: { id } });
+    console.log(tokens, "tokens");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -22,18 +26,18 @@ export default async function handler(
     await GameResult.create({
       data: {
         userId: user.id,
-        tokensEarned: tokens,
+        tokensEarned: tokens.toString(),
         gameType: "numans",
       },
     });
 
     if (user.invitedById) {
-      const referralPoints = getReferralPoints(tokens);
+      const referralPoints = getReferralPoints(tokens.toNumber());
 
       await GameResult.create({
         data: {
           userId: user.invitedById,
-          tokensEarned: referralPoints,
+          tokensEarned: new Decimal(referralPoints),
           gameType: "referral",
         },
       });

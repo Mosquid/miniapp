@@ -21,7 +21,5 @@ export function authorizeRequest(req: NextApiRequest) {
       // We consider init data sign valid for 1 hour from their creation moment.
       expiresIn: 3600,
     });
-
-    console.log({ valid });
   }
 }

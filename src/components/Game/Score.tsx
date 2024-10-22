@@ -25,6 +25,7 @@ const Score: FC<ScoreProps> = ({ points, onClose, onRepeat, user }) => {
       const timeout = setTimeout(() => {
         setScore((prevScore) => {
           const newScore = prevScore + increment;
+          console.log(newScore, "newScore");
           return Number(newScore.toFixed(2));
         });
         setPointsToAdd((prevPoints) => Math.max(0, prevPoints - 0.1));
@@ -36,7 +37,7 @@ const Score: FC<ScoreProps> = ({ points, onClose, onRepeat, user }) => {
   return (
     <div className={styles.score}>
       <ToTheMoonHeader score={points} user={user} />
-      <Typography variant="h2">Total: {score.toFixed(2)} sqz</Typography>
+      <Typography variant="h2">Total: {score} sqz</Typography>
 
       <div style={{ display: "flex", gap: 10 }}>
         <Button onClick={onClose} type="highlight" disabled={isLoading}>
