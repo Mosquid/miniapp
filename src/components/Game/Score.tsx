@@ -24,8 +24,8 @@ const Score: FC<ScoreProps> = ({ points, onClose, onRepeat, user }) => {
       const increment = points > 0 ? 0.1 : -0.1;
       const timeout = setTimeout(() => {
         setScore((prevScore) => {
-          const newScore = prevScore + increment;
-          console.log(newScore, "newScore");
+          const newScore = Number(prevScore) + increment;
+
           return Number(newScore.toFixed(2));
         });
         setPointsToAdd((prevPoints) => Math.max(0, prevPoints - 0.1));
