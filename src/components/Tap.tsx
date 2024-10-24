@@ -5,6 +5,7 @@ import { fetchUser, updateUser } from "@/services/users";
 import { useCurrentUser } from "@/components/CurrentUserProvider";
 import { noop } from "lodash";
 import Typography from "./Typography";
+import Skeleton from "react-loading-skeleton";
 
 export interface TapProps {
   userId: string;
@@ -45,17 +46,21 @@ const Tap: FC<TapProps> = ({ userId }) => {
   noop(earn);
 
   useEffect(() => {
-    if (!user) {
-      return;
-    }
-
-    if (user?.tokens !== debounceTokens) {
+    if (user && user?.tokens !== debounceTokens) {
       updateUser(userId, { tokens: debounceTokens });
     }
   }, [debounceTokens]);
 
   if (!user) {
-    return <h1 style={{ textAlign: "center" }}>Loading...</h1>;
+    return (
+      <Skeleton
+        count={3}
+        highlightColor="rgba(86, 247, 200, 0.47)"
+        baseColor="rgba(0, 0, 0, 0.47)"
+        height={50}
+        style={{ opacity: 0.5, marginBottom: 2.6 }}
+      />
+    );
   }
 
   return (

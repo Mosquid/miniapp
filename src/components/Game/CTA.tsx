@@ -1,6 +1,6 @@
 import { FC } from "react";
 import TouchArea from "../TouchArea";
-import rocket from "./assets/rocket-large.svg";
+import rocket from "./assets/rocket-diagonal.svg";
 import Typography from "../Typography";
 import styles from "./game.module.css";
 
@@ -23,15 +23,16 @@ const GameCTA: FC<CTAProps> = ({ onPlay }) => {
             fontSize: 28,
           }}
         >
-          <strong style={{ fontWeight: 700 }}>Mad</strong>Flight
+          To the Moon
         </Typography>
         <Typography
           variant="p"
           weight={300}
           element="div"
-          style={{ fontSize: 10, lineHeight: "11px" }}
+          style={{ fontSize: 10, lineHeight: "12px", maxWidth: "70%" }}
         >
-          Blast off to victory, earning points with every cosmic mile conquered
+          You have 15 seconds. At any moment, there could be a big drop. Lock in
+          your winnings before the market crashes.
         </Typography>
       </div>
     </TouchArea>

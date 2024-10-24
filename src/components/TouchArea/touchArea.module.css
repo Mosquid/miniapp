@@ -11,3 +11,6 @@
   cursor: pointer;
   height: 110px;
 }
+.root:active {
+  transform: scale(0.98);
+}

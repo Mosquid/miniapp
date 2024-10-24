@@ -36,14 +36,37 @@ const Score: FC<ScoreProps> = ({ points, onClose, onRepeat, user }) => {
 
   return (
     <div className={styles.score}>
-      <ToTheMoonHeader score={points} user={user} />
-      <Typography variant="h2">Total: {score} sqz</Typography>
-
-      <div style={{ display: "flex", gap: 10 }}>
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ToTheMoonHeader score={points} user={user} />
+        <Typography variant="h2">Total: {score} sqz</Typography>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          gap: 10,
+          marginTop: "auto",
+          marginBottom: 50,
+        }}
+      >
         <Button onClick={onClose} type="highlight" disabled={isLoading}>
           Close
         </Button>
-        <Button onClick={onRepeat} type="highlight" disabled={isLoading}>
+        <Button
+          onClick={onRepeat}
+          style={{
+            width: 188,
+          }}
+          type="highlight"
+          disabled={isLoading}
+        >
           Repeat
         </Button>
       </div>
