@@ -13,6 +13,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import Loader from "./Loader";
 
 export interface CurrentUserContextValue {
   user: CurrentUser | null;
@@ -31,6 +32,7 @@ export interface CurrentUserProviderProps {
 const CurrentUserProvider: FC<CurrentUserProviderProps> = ({ children }) => {
   const [authorized, setAuthorized] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const initData = useMemo(() => {
     if (typeof window !== "undefined") {
@@ -57,7 +59,9 @@ const CurrentUserProvider: FC<CurrentUserProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (initData?.user?.id) {
+      setLoading(true);
       fetchUser(initData?.user?.id.toString()).then((user) => {
+        setLoading(false);
         setCurrentUser({
           ...user,
           firstName: initData?.user?.firstName || "",
@@ -65,6 +69,7 @@ const CurrentUserProvider: FC<CurrentUserProviderProps> = ({ children }) => {
           id: initData?.user?.id || 0,
           photoUrl: user?.photoUrl || "",
           username: initData?.user?.username || "",
+          tokens: user?.tokens || 0,
         });
       });
     }
@@ -89,7 +94,12 @@ const CurrentUserProvider: FC<CurrentUserProviderProps> = ({ children }) => {
       ...prev,
       ...user,
     }));
+    setLoading(false);
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <CurrentUserContext.Provider value={{ user, updateCurrentUser }}>

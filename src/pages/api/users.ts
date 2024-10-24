@@ -4,11 +4,11 @@ import { authorizeRequest } from "@/lib/auth";
 import { User as UserModel } from "@/lib/db";
 import { getUserPhoto } from "@/lib/telegram";
 import { getUserTokens } from "@/queries/users";
-import { User } from "@prisma/client";
+import type { UserDTO } from "@/types/User";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type ResponseData = {
-  user?: User;
+  user?: UserDTO;
   message?: string;
 };
 
@@ -26,7 +26,12 @@ async function handleUpdateUser(
   });
 
   if (updatedUser) {
-    return res.json({ user: updatedUser });
+    return res.json({
+      user: {
+        ...updatedUser,
+        tokens: updatedUser.tokens || 0,
+      },
+    });
   }
 
   return res.status(404).json({ message: "user not found" });
@@ -49,7 +54,8 @@ async function handleGetUser(
       user: {
         ...user,
         photoUrl: photoUrl || null,
-        tokens: tokens.toNumber(),
+        tokens: tokens.total.toNumber(),
+        dailyTokens: tokens.daily.toNumber(),
       },
     });
   }

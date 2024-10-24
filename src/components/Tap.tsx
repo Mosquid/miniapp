@@ -63,6 +63,7 @@ const Tap: FC<TapProps> = ({ userId }) => {
       style={{
         paddingTop: 20,
         textAlign: "center",
+        marginBottom: 40,
       }}
     >
       <Typography
@@ -71,11 +72,34 @@ const Tap: FC<TapProps> = ({ userId }) => {
         weight={300}
         style={{ fontSize: 15 }}
       >
-        Total balance SQZ
+        Total balance <span style={{ opacity: 0.5 }}>SQZ</span>
       </Typography>
       <Typography variant="h1" weight={300} style={{ fontSize: 42 }}>
         {tokens.toFixed(2)}
       </Typography>
+      <Typography variant="p" weight={300} style={{ fontSize: 15 }}>
+        {user.tokens}
+      </Typography>
+      <div
+        style={{
+          paddingTop: 20,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Typography
+          variant="p"
+          weight={300}
+          style={{
+            fontSize: 20,
+          }}
+        >
+          {currentUser?.dailyTokens}
+        </Typography>
+        <Typography weight={300} variant="p" style={{ fontSize: 10 }}>
+          Daily income
+        </Typography>
+      </div>
       {/* <Button onClick={earn}>Claim +1</Button> */}
     </div>
   );

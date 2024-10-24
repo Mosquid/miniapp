@@ -1,6 +1,6 @@
 .root {
-  background-color: #3b3b31;
-  border-radius: 20px;
+  background-color: #313131;
+  border-radius: 7px;
   padding: 10px;
   padding-right: 40px;
   margin-bottom: 5px;
@@ -9,11 +9,5 @@
   align-items: center;
   gap: 13px;
   cursor: pointer;
-}
-.arrow {
-  position: absolute;
-  top: 50%;
-  right: 13px;
-  transform: translateY(-50%);
-  width: 12px;
+  height: 110px;
 }

@@ -14,16 +14,36 @@ export const getUserByReferralCode = async (
   return user;
 };
 
-export const getUserTokens = async (userId: string): Promise<Decimal> => {
+export const getUserTokens = async (
+  userId: string
+): Promise<{
+  total: Decimal;
+  daily: Decimal;
+}> => {
   try {
-    const totalPoints = await GameResult.aggregate({
-      where: { userId },
-      _sum: { tokensEarned: true },
-    });
+    const [totalPoints, dailyPoints] = await Promise.all([
+      GameResult.aggregate({
+        where: { userId },
+        _sum: { tokensEarned: true },
+      }),
+      GameResult.aggregate({
+        where: {
+          userId,
+          createdAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) },
+        },
+        _sum: { tokensEarned: true },
+      }),
+    ]);
 
-    return new Decimal(totalPoints._sum.tokensEarned || 0);
+    return {
+      total: new Decimal(totalPoints._sum.tokensEarned || 0),
+      daily: new Decimal(dailyPoints._sum.tokensEarned || 0),
+    };
   } catch (error) {
     console.error("Failed to get user tokens", error);
-    return new Decimal(0);
+    return {
+      total: new Decimal(0),
+      daily: new Decimal(0),
+    };
   }
 };
