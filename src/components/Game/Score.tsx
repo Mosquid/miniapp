@@ -41,12 +41,13 @@ const Score: FC<ScoreProps> = ({ points, onClose, onRepeat, user }) => {
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
           justifyContent: "center",
         }}
       >
         <ToTheMoonHeader score={points} user={user} />
-        <Typography variant="h2">Total: {score} sqz</Typography>
+        <Typography variant="h2" style={{ marginLeft: 12 }}>
+          Total: {score} sqz
+        </Typography>
       </div>
       <div
         style={{
