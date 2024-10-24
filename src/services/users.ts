@@ -1,9 +1,10 @@
 import serviceFetch, { get } from "@/lib/service";
+import { UserDTO } from "@/types/User";
 import { User } from "@prisma/client";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "";
 
-export const fetchUser = async (userId: string): Promise<User> => {
+export const fetchUser = async (userId: string): Promise<UserDTO> => {
   const response = await get(`${APP_URL}/api/users`, {
     headers: {
       "x-username": userId,

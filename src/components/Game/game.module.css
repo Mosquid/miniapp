@@ -15,6 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #232323;
 }
 .stage {
   flex: 1;

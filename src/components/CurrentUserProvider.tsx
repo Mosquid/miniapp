@@ -70,6 +70,7 @@ const CurrentUserProvider: FC<CurrentUserProviderProps> = ({ children }) => {
           photoUrl: user?.photoUrl || "",
           username: initData?.user?.username || "",
           tokens: user?.tokens || 0,
+          dailyTokens: user?.dailyTokens || 0,
         });
       });
     }
@@ -82,6 +83,7 @@ const CurrentUserProvider: FC<CurrentUserProviderProps> = ({ children }) => {
   const updateCurrentUser = (user: Partial<CurrentUser>) => {
     setCurrentUser((prev) => ({
       tokens: prev?.tokens || user.tokens || 0,
+      dailyTokens: prev?.dailyTokens || user.dailyTokens || 0,
       createdAt: prev?.createdAt || user.createdAt || new Date(),
       updatedAt: prev?.createdAt || user.createdAt || new Date(),
       photoUrl: prev?.photoUrl || user.photoUrl || "",

@@ -43,9 +43,9 @@ export default async function handler(
       });
     }
 
-    const totalPoints = await getUserTokens(user.id);
+    const { total, daily } = await getUserTokens(user.id);
 
-    res.status(200).json({ tokens: totalPoints });
+    res.status(200).json({ tokens: total, dailyTokens: daily });
   } catch (error) {
     console.error("Failed to save game result", error);
     res.status(400).json({ message: "Failed to save game result" });

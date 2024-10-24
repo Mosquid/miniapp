@@ -28,7 +28,11 @@ const ToTheMoon = () => {
     if (user) {
       setIsLoading(true);
       saveGameResult(userId, score).then((data) => {
-        updateCurrentUser({ tokens: data.tokens, updatedAt: new Date() });
+        updateCurrentUser({
+          tokens: data.tokens,
+          dailyTokens: data.dailyTokens,
+          updatedAt: new Date(),
+        });
         setIsLoading(false);
       });
     }
